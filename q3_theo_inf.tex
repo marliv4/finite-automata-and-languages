@@ -1,0 +1,161 @@
+\documentclass{article}
+\usepackage{ngerman, amsmath, xcolor, cancel, hyperref}
+\author{Marko Livajusic}
+\date{\today}
+\title{Theoretische Informatik: Endliche Automaten, Formale Sprachen und Grammatiken}
+\hypersetup{
+    colorlinks,
+    citecolor=blue,
+    filecolor=blue,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+\newcommand{\ra}{\rightarrow}
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Q3.2: Deterministische Endliche Automaten (DEAs)}
+\subsection{Transduktor}
+\subsection{Akzeptor}
+\subsection{Mealy- und Mooreautomat (irrelevant)}
+\subsection{Minimerung von DEAs}
+\section{Q3.2: Nichtdeterministische Endliche Automaten (NEAs)}
+\subsection{$\epsilon-$NEAs}
+\subsubsection{$\epsilon$-NEA $\rightarrow$ NEA (6 Konstruktionsregeln)}
+\subsubsection{$\epsilon$-NEA $\rightarrow$ DEA (Potenzmengenkonstruktion)}
+\subsection{NEA $\rightarrow$ DEA (Potenzmengenkonstruktion)}
+\section{Q3.2: RegEx}
+\subsection{RegEx $\rightarrow$ $\epsilon$-NEA}
+
+\subsection{Formale Sprachen}
+\subsubsection{Reguläre Sprachen}
+Eine Sprache $L$ ist dann \textit{regulär}, wenn diese sich darstellen lässt mithilfe eines:
+\begin{enumerate}
+    \item deterministischen endlichen Automatens
+    \item regulären Ausdrucks
+\end{enumerate}
+
+\section{Q3.2: Grammatiken}
+Eine Grammatik $G$ ist ein 4-Tupel $G=\{N,T,P,S\}$, wobei
+\begin{itemize}
+    \item $N$ das \textbf{Nichtterminalalphabet}
+    \item $T$ das \textbf{Terminalalphabet}
+    \item $P$ die \textbf{Produktionen}
+    \item $S$ das \textbf{Startsymbol} ist.
+\end{itemize}
+\subsection{Typ 3 Grammatik (regulär)}
+Eine Grammatik $G$ ist dann \textit{regulär}, wenn in den Produktionen $P$
+\begin{itemize}
+    % https://de.wikipedia.org/wiki/Regul%C3%A4re_Grammatik#Definition
+    \item links ein Nichtterminal und rechts ein oder mehrere Terminale vorkommen gefolgt von maximal einem Nichtterminal
+\end{itemize}
+\section{Ableitung}
+Gegeben sei folgende Grammatik:
+\begin{align*}
+    T &= \{x,y,z\}\\
+    N &= \{S, M, A, V\}\\
+    P &= \{\\
+        &S\rightarrow A|M|V\\
+        &A\rightarrow (S+S)\\
+        &M\rightarrow (S\cdot S)\\
+        &V\rightarrow x|y|z\\
+    &\}
+\end{align*}
+Wie wird das Wort $(x\cdot (y+z))$ gebildet?
+\begin{align*}
+    S\Rightarrow M\Rightarrow (S\cdot S)\\
+    \Rightarrow (v\cdot S)\Rightarrow (x\cdot S)\Rightarrow (x\cdot A)\Rightarrow\\ (x\cdot (S+S))\Rightarrow (x\cdot (v + S))\Rightarrow (x\cdot (y + S))\Rightarrow (x\cdot (y + v))\Rightarrow (x\cdot (y + z))
+\end{align*}
+\subsection{Ableitungsbaum}
+Dies kann man auch mit einem Ableitungsbaum darstellen:
+\section{Kontextfreie Sprachen}
+Gegeben sei folgende kontextfreie Grammatik:
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P&=\{\\
+        &S\ra AB\\
+        &S\ra ABA\\
+        &A\ra aA\\
+        &A\ra a\\
+        &B\ra Bb\\
+        &B\ra \epsilon\\
+    \}
+\end{align*}
+\subsection{Chomsky-Normalform (klausurrelevant, abitur-irrelevant)}
+\label{cnf}
+\subsubsection{1. $\epsilon$-Elimination}
+Zuerst wird $B\ra \epsilon$ entfernt. Die aktualisierte Grammatik lautet:
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P=\{\\
+    &S\ra AB\\
+    &\mathbf{S\ra A}\\
+    &\mathbf{S\ra AA}\\
+    &A\ra aA\\
+    &A\ra a\\
+    &B\ra b\\
+    \}
+\end{align*}
+\subsubsection{2. Elimination von Kettenregeln}
+Die Kettenregeln, d.h. überall da, wo ein Nichtterminal auf ein anderes Nichtterminal folgt, d.h. $S\ra A$, werden entfernt.
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P=\{\\
+    &S\ra AB\\
+    &S\ra AA\\
+    &A\ra aA\\
+    &A\ra a\\
+    &B\ra b\\
+    \}
+\end{align*}
+\subsubsection{3. Separation von Terminalzeichen}
+Jedes Terminal wird durch ein Nichtterminal ersetzt:
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P=\{\\
+    &S\ra AB\\
+    &S\ra aA \quad |\ V_a = a\\
+    &S\ra V_{a}A\\
+    &S\ra a\\
+    &S\ra ABA\\
+    &S\ra AA\\
+    &A\ra a\\
+    &B\ra BV_b\\
+    &B\ra b\\
+    &V_a\ra a\\
+    &V_b\ra b\\
+    \}
+\end{align*}
+\subsubsection{4. Elimination von mehrelementigen Nonterminalketten}
+In diesem Schritt wird die Anzahl von Nichtterminalen auf 2 reduziert, d.h. $S\ra ABA$ wird zu $S\ra S_2A$, wobei $S_2$ als $S_2\ra AB$ definiert wird.
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P=\{\\
+    &S\ra AB\\
+    &S\ra V_{a}A\\
+    &S\ra a\\
+    &\mathbf{S\ra S_2A}\\
+    S_2\ra AB
+    &S\ra AA\\
+    &A\ra a\\
+    &B\ra BV_b\\
+    &B\ra b\\
+    &V_a\ra a\\
+    &V_b\ra b\\
+    \}
+\end{align*}
+\subsection{CYK-Algorithmus (klausurrelevant, abitur-irrelevant)}
+Mit dem CYK-Algorithmus lässt sich sagen, ob ein Wort $\omega$ in einer kontextfreien Sprache liegt. Voraussetzung für den CYK-Algorithmus ist die Chomsky-Normalform (\ref{cnf}).
+\end{document}
