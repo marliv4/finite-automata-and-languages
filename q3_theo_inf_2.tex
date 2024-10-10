@@ -1,0 +1,146 @@
+\subsection{Formale Sprachen}
+\subsubsection{Reguläre Sprachen}
+Eine Sprache $L$ ist dann \textit{regulär}, wenn diese sich darstellen lässt mithilfe eines:
+\begin{enumerate}
+    \item deterministischen endlichen Automatens
+    \item regulären Ausdrucks
+\end{enumerate}
+
+\section{Q3.2: Grammatiken}
+Eine Grammatik $G$ ist ein 4-Tupel $G=\{N,T,P,S\}$, wobei
+\begin{itemize}
+    \item $N$ das \textbf{Nichtterminalalphabet}
+    \item $T$ das \textbf{Terminalalphabet}
+    \item $P$ die \textbf{Produktionen}
+    \item $S$ das \textbf{Startsymbol} ist.
+\end{itemize}
+\subsection{Typ 3 Grammatik (regulär)}
+Eine Grammatik $G$ ist dann \textit{regulär}, wenn in den Produktionen $P$
+\begin{itemize}
+    % https://de.wikipedia.org/wiki/Regul%C3%A4re_Grammatik#Definition
+    \item links ein Nichtterminal und rechts ein oder mehrere Terminale vorkommen gefolgt von maximal einem Nichtterminal
+\end{itemize}
+\section{Ableitung}
+Gegeben sei folgende Grammatik:
+\begin{align*}
+    T &= \{x,y,z\}\\
+    N &= \{S, M, A, V\}\\
+    P &= \{\\
+        &S\rightarrow A|M|V\\
+        &A\rightarrow (S+S)\\
+        &M\rightarrow (S\cdot S)\\
+        &V\rightarrow x|y|z\\
+    &\}
+\end{align*}
+Wie wird das Wort $(x\cdot (y+z))$ gebildet?
+\begin{align*}
+    S\Rightarrow M\Rightarrow (S\cdot S)\\
+    \Rightarrow (v\cdot S)\Rightarrow (x\cdot S)\Rightarrow (x\cdot A)\Rightarrow\\ (x\cdot (S+S))\Rightarrow (x\cdot (v + S))\Rightarrow (x\cdot (y + S))\Rightarrow (x\cdot (y + v))\Rightarrow (x\cdot (y + z))
+\end{align*}
+\subsection{Ableitungsbaum}
+Dies kann man auch mit einem Ableitungsbaum darstellen:
+\subsection{Syntaxdiagramme: Regeln}
+\begin{enumerate}
+    \item $1$ Syntaxdiagramm $\hat{=}\ 1\ $ Produktionsregel, wobei das Syntaxdiagramm der Name der Produktionsregel ist
+    \item Nichtterminale: eckig
+    \item Terminale: rund
+\end{enumerate}
+
+\section{Kontextfreie Sprachen}
+Gegeben sei folgende kontextfreie Grammatik:
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P&=\{\\
+        &S\to AB\\
+        &S\to ABA\\
+        &A\to aA\\
+        &A\to a\\
+        &B\to Bb\\
+        &B\to \epsilon\\
+    \}
+\end{align*}
+\subsection{Chomsky-Normalform (klausurrelevant, abitur-irrelevant)}
+\label{cnf}
+\subsubsection{1. $\epsilon$-Elimination}
+Zuerst wird $B\to \epsilon$ entfernt. Die aktualisierte Grammatik lautet:
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P=\{\\
+    &S\to AB\\
+    &\mathbf{S\to A}\\
+    &\mathbf{S\to AA}\\
+    &A\to aA\\
+    &A\to a\\
+    &B\to b\\
+    \}
+\end{align*}
+\subsubsection{2. Elimination von Kettenregeln}
+Die Kettenregeln, d.h. überall da, wo ein Nichtterminal auf ein anderes Nichtterminal folgt, d.h. $S\to A$, werden entfernt.
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P=\{\\
+    &S\to AB\\
+    &S\to AA\\
+    &A\to aA\\
+    &A\to a\\
+    &B\to b\\
+    \}
+\end{align*}
+\subsubsection{3. Separation von Terminalzeichen}
+Jedes Terminal wird durch ein Nichtterminal ersetzt:
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P=\{\\
+    &S\to AB\\
+    &S\to aA \quad |\ V_a = a\\
+    &S\to V_{a}A\\
+    &S\to a\\
+    &S\to ABA\\
+    &S\to AA\\
+    &A\to a\\
+    &B\to BV_b\\
+    &B\to b\\
+    &V_a\to a\\
+    &V_b\to b\\
+    \}
+\end{align*}
+\subsubsection{4. Elimination von mehrelementigen Nonterminalketten}
+In diesem Schritt wird die Anzahl von Nichtterminalen auf 2 reduziert, d.h. $S\to ABA$ wird zu $S\to S_2A$, wobei $S_2$ als $S_2\to AB$ definiert wird.
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P=\{\\
+    &S\to AB\\
+    &S\to V_{a}A\\
+    &S\to a\\
+    &\mathbf{S\to S_2A}\\
+    S_2\to AB
+    &S\to AA\\
+    &A\to a\\
+    &B\to BV_b\\
+    &B\to b\\
+    &V_a\to a\\
+    &V_b\to b\\
+    \}
+\end{align*}
+\subsection{CYK-Algorithmus (klausurrelevant, abitur-irrelevant)}
+Mit dem CYK-Algorithmus lässt sich sagen, ob ein Wort $\omega$ in einer kontextfreien Sprache liegt. Voraussetzung für den CYK-Algorithmus ist die Chomsky-Normalform (\ref{cnf}).
+\begin{bsp}
+    Sei $G$ eine Grammatik mit Produktionsregeln $P$, die definiert sind als:
+    \begin{align*}
+        &S\to BC|AC|BA\\
+        &A\to AA|BB|a\\
+        &B\to BA|b\\
+        &C\to AC|c
+    \end{align*}
+    Nun bestimme man, ob das Wort $ababac$ in $L(G)$ liegt.
+\end{bsp}
