@@ -1,7 +1,8 @@
 \documentclass{book}
-\usepackage{ngerman, amsmath, xcolor, cancel, hyperref, float, FLaAL}
+\usepackage{ngerman, amsmath, xcolor, cancel, hyperref, float, microtype, FLaAL}
 \newtheorem{bsp}{Beispiel}
 \newtheorem{definition}{Definition}
+% \usepackage[showframe]{geometry}
 
 \author{Marko Livajusic}
 \date{\today}
@@ -17,92 +18,15 @@
 \begin{document}
 \maketitle
 \tableofcontents
-
-\section{Deterministische Endliche Automaten (DEAs)}
-\subsection{Transduktor}
-\begin{definition}
-Ein Transduktorautomat $\mathcal{T}: \{\Sigma, A, Z, z_{0}, \delta, \lambda\}$ ist ein deterministicher endlicher Automat ohne einen Endzustand.
-\end{definition}
-\begin{align*}
-    \mathbf{\Sigma} &: \text{Eingabealphabet}\\
-    \mathbf{A} &: \text{Ausgabealphabet}\\
-    \mathbf{Z} &: \text{Zustandsmenge}\\
-    \mathbf{z_{0}} \in Z &: \text{Startzustand}\\
-    \mathbf{\delta }: \Sigma \times Z \rightarrow Z &: \text{Überführungsfunktion}\\
-    \mathbf{\lambda }: \Sigma \times Z \rightarrow A\text{*} &: \text{Ausgabefunktion}
-\end{align*}
-
-\subsection{Akzeptor}
-\begin{definition}
-Ein Akzeptor $\mathcal{A}: \{\Sigma, Z, z_{0}, \delta, F\}$ ist ein deterministicher endlicher Automat, der die Eingabe überprüft und keine Ausgabe besitzt. Er lässt sich wie folgt beschreiben:
-\end{definition}
-    \begin{align*}
-    \Sigma &: \text{Eingabealphabet}\\
-    Z &: \text{Zustandsmenge}\\
-    z_{0} &: \text{Startzustand}\\
-    \delta &: \text{Überführungsfunktion}\\
-    F &: \text{Endzustandsmenge}
-\end{align*}
-
-\subsection{Mealy- und Mooreautomat (irrelevant)}
-\subsection{Minimerung von DEAs}
+\newpage
+\newpage
+\include{deas_definitionen}
+\include{minimierung.tex}
 \section{Q3.2: Nichtdeterministische Endliche Automaten (NEAs)}
 \subsection{$\epsilon-$NEAs}
 \subsubsection{$\epsilon$-NEA $\rightarrow$ NEA (6 Konstruktionsregeln)}
-\subsubsection{$\epsilon$-NEA $\rightarrow$ DEA (Potenzmengenkonstruktion)}
 
-\subsection{NEA $\rightarrow$ DEA (Potenzmengenkonstruktion)}
-\begin{figure}
-    \centering
-    \begin{transitiongraph}[fa]
-        \state[s]{q0}{0}{0}
-        \state{q1}{65}{0}
-        \state[f]{q2}{120}{0}
-        \transition{q0}{q0}{a;b}
-        \transition{q0}{q1}{b}
-        \transition{q1}{q2}{b}
-        \transition{q2}{q2}{a;b}
-    \end{transitiongraph}
-    % \caption{NEA_LaTeX}
-    \label{graph:NEA_LaTeX}
-\end{figure}
-\textbf{Vorgehen}: Es wird zuerst eine Übergangstabelle aufgestellt und geschaut, welche Zustände neu auftreten.
-\begin{table}[]
-\begin{tabular}{|l|l|l|}
-\hline
-Zustand             & $a$              & $b$                   \\
-\hline
-$\to q_0$           & $q_0$           & $\{q_0,q_1\}$       \\
-\hline
-$\{q_0,q_1\}$       & $q_0$           & $\{q_0,q_1,q_2\mbox{*}\}$ \\
-\hline
-$\{q_0,q_1,q_2\}\mbox{*}$ & $\{q_0,q_2\mbox{*}\}$ & $\{q_0,q_1,q_2\mbox{*}\}$   \\
-\hline
-$\{q_0,q_2\}\mbox{*}$      & $\{q_0,q_2\mbox{*}\}$ & $\{q_0,q_1,q_2\mbox{*}\}$ \\
-\hline
-\end{tabular}
-\end{table}\\
-Danach wird aus dieser Übergangstabelle der DEA gezeichnet:\\
-\begin{figure}[H]
-    \centering
-    \begin{transitiongraph}[fa]
-        \state[s]{q0}{0}{0}
-        \state[f]{q02}{120}{-60}
-        \state{q01}{0}{-60}
-        \state[f]{q012}{60}{-60}
-        \transition{q0}{q0}{a}
-        \transition[line=left]{q0}{q01}{b}
-        \transition{q02}{q02}{a}
-        \transition[line=left]{q02}{q012}{b}
-        \transition[line=left]{q01}{q0}{a}
-        \transition{q01}{q012}{b}
-        \transition[line=left]{q012}{q02}{a}
-        \transition{q012}{q012}{b}
-    \end{transitiongraph}
-    % \caption{NEA_LaTeX}
-    \label{graph:NEA_LaTeX}
-\end{figure}
-
+\include{nea_to_dea_potenzm}
 \section{Reguläre Ausdrücke}
 \subsection{RegEx $\rightarrow$ $\epsilon$-NEA}
 \end{document}
