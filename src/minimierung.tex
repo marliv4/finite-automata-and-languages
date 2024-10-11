@@ -1,0 +1,91 @@
+\subsection{Minimierung von DEAs}
+Zu minimieren sei folgender DEA:\\
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{-23.333}
+        \state{q1}{53.333}{0}
+        \state{q2}{50}{-53.333}
+        \state[f]{q3}{120}{-23.333}
+        \transition{q0}{q1}{0}
+        \transition{q0}{q2}{1}
+        \transition[line=left]{q1}{q2}{0}
+        \transition{q1}{q3}{1}
+        \transition[line=left]{q2}{q1}{0}
+        \transition{q2}{q3}{1}
+        \transition{q3}{q3}{0;1}
+    \end{transitiongraph}
+\end{figure}
+Diagonale als äquivalent markieren:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    Zustand    & $q_0$       & $q_1$    & $q_2$    & $q_3$       \\ \hline
+    $q_0$      & $\equiv$ &          &          &          \\ \hline
+    $q_1$      &          & $\equiv$ &          &          \\ \hline
+    $q_2$      &          &          & $\equiv$ &          \\ \hline
+    $q_3$      &          &          &          & $\equiv$ \\ \hline
+    \end{tabular}
+\end{table}
+Felder, wo ein Zustand auf einen Endzustand trifft, streichen
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    Zustand    & $q_0$    & $q_1$    & $q_2$    & $q_3$    \\ \hline
+    $q_0$      & $\equiv$ &          &          &          \\ \hline
+    $q_1$      &          & $\equiv$ &          &          \\ \hline
+    $q_2$      &          &          & $\equiv$ &          \\ \hline
+    $q_3$      &   X      &   X      &    X     & $\equiv$ \\ \hline
+    \end{tabular}
+\end{table}
+Eine Übergangstabelle mit übrigen Zuständen erstellen. Die Zustandspaare, die auf einen bereits gestrichenen Zustandspaar abgebildet werden, streichen
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    Zustand      & 0           & 1           \\ \hline
+    $\color{red}(q_0,q_1)$  & $(q_1,q_2)$ & $\mathbf{(q_2,q_3)}$ \\ \hline
+    $\color{red}(q_0,q_2)$  & $(q_1,q_1)$ & $\mathbf{(q_2,q_3)}$ \\ \hline
+    $\color{red}(q_0,q_3)$  & $(q_1,q_3)$ & $\mathbf{(q_2,q_3)}$ \\ \hline
+    $(q_1,q_2)$  & $(q_2,q_1)$ & $(q_3,q_3)$ \\ \hline
+    \end{tabular}
+\end{table}
+Die neue Tabelle sieht dann so aus:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    Zustand    & $q_0$    &     $q_1$       & $q_2$    & $q_3$    \\ \hline
+    $q_0$      & $\equiv$ &                 &          &          \\ \hline
+    $q_1$      &    X     &     $\equiv$    &          &          \\ \hline
+    $q_2$      &    X     &                 & $\equiv$ &          \\ \hline
+    $q_3$      &    X     &     X           &    X     & $\equiv$ \\ \hline
+    \end{tabular}
+\end{table}
+Die leeren Felder als äquivalent markieren:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    Zustand    & $q_0$    &     $q_1$       & $q_2$    & $q_3$    \\ \hline
+    $q_0$      & $\equiv$ &                 &          &          \\ \hline
+    $q_1$      &    X     &     $\equiv$    &          &          \\ \hline
+    $q_2$      &    X     &     $\equiv$    & $\equiv$ &          \\ \hline
+    $q_3$      &    X     &     X           &    X     & $\equiv$ \\ \hline
+    \end{tabular}
+\end{table}
+Spaltenweise die Zustände zusammenfassen:
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{-12}
+        \state{q1q2}{64}{0}
+        \state[f]{q3}{120}{-24}
+        \transition{q0}{q1q2}{0;1}
+        \transition{q1q2}{q3}{1}
+        \transition{q1q2}{q1q2}{0}
+        \transition{q3}{q3}{0;1}
+    \end{transitiongraph}
+\end{figure}
