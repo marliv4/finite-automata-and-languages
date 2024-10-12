@@ -1,33 +1,59 @@
-\documentclass{book}
-\usepackage{ngerman, amsmath, xcolor, cancel, hyperref, float, microtype, FLaAL}
+\documentclass[12pt, oneside]{book}
+\usepackage{ngerman, amsmath, amssymb, xcolor, cancel, hyperref, float, microtype, FLaAL}
+\usepackage{lmodern, titlesec, geometry, tocloft}
+
+% Page and font styling
+\geometry{a4paper, margin=3cm}
+\setlength{\parskip}{0.5em} % Space between paragraphs
+\setlength{\parindent}{0pt} % Remove paragraph indentation
+\microtypesetup{protrusion=true, expansion=true}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    filecolor=blue,
+    urlcolor=blue
+}
+
+\titleformat{\chapter}[hang]{\bfseries\huge}{\thechapter.}{1em}{}
+\titleformat{\section}[hang]{\bfseries\Large}{\thesection}{1em}{}
+\titleformat{\subsection}[hang]{\bfseries\large}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}[hang]{\bfseries\normalsize}{\thesubsubsection}{1em}{}
+
+\renewcommand{\cftchapfont}{\normalfont\bfseries}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsubsecfont}{\normalfont}
+\renewcommand{\cftchappagefont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+\renewcommand{\cftsubsecpagefont}{\normalfont}
+\setlength{\cftbeforechapskip}{1em} % Add spacing between chapters in TOC
+\setlength{\cftbeforesecskip}{0.5em} % Add spacing between sections in TOC
+
 \newtheorem{bsp}{Beispiel}
 \newtheorem{definition}{Definition}
-% \usepackage[showframe]{geometry}
 
 \author{Marko Livajusic}
 \date{\today}
 \title{Theoretische Informatik: Endliche Automaten, Formale Sprachen und Grammatiken}
-\hypersetup{
-    colorlinks,
-    citecolor=blue,
-    filecolor=blue,
-    linkcolor=blue,
-    urlcolor=blue
-}
 
 \begin{document}
 \maketitle
 \tableofcontents
-\newpage
-\newpage
+\cleardoublepage
+
 \include{deas_definitionen}
 \include{minimierung.tex}
-\section{Q3.2: Nichtdeterministische Endliche Automaten (NEAs)}
-\subsection{$\epsilon-$NEAs}
-\subsubsection{$\epsilon$-NEA $\to$ NEA}
+
+% TODO
+\chapter{Nichtdeterministische Endliche Automaten}
+\section{$\epsilon$-NEAs}
+\subsection{$\epsilon$-NEA $\rightarrow$ NEA}
 
 \include{nea_to_dea_potenzm}
 \include{eps_nea_to_dea}
-\section{Reguläre Ausdrücke}
-\subsection{RegEx $\rightarrow$ $\epsilon$-NEA}
+
+% TODO
+\chapter{Reguläre Ausdrücke}
+\section{RegEx $\rightarrow$ $\epsilon$-NEA (6 Konstruktionsregeln)}
 \end{document}
