@@ -1,0 +1,59 @@
+\subsubsection{$\epsilon$-NEA $\to$ DEA}
+Es sei folgendes Zustandsdiagramm eines $\epsilon$-NEAs gegeben:\\
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state[f]{q2}{60}{0}
+        \state{q4}{120}{-60}
+        \state{q1}{0}{-60}
+        \state{q3}{120}{0}
+        \transition[line=left]{q0}{q1}{A}
+        \transition{q0}{q2}{}
+        \transition{q2}{q3}{;B}
+        \transition[line=left]{q2}{q4}{A}
+        \transition[line=left]{q4}{q2}{B}
+        \transition[line=left]{q1}{q0}{A}
+        \transition{q3}{q4}{A}
+    \end{transitiongraph}
+    % \caption{epsNEA}
+    \label{graph:epsNEA}
+\end{figure}
+Die Umwandlung in ein DEA geschieht wie üblich mit der Potenzmengenkonstruktion:
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Zustand         & A           & B               \\ \hline
+$\to q_0$       & $\{q_1,q_4\}$ & $\{q_3\}$           \\ \hline
+$\{q_1,q_4\}$     & $\{q_0\}$     & $\{q_2\mbox{*}\}$ \\ \hline
+$\{q_3\}$         & $\{q_4\}$     & $\emptyset$     \\ \hline
+$\{q_2\mbox{*}\}$ & $\{q_4\}$     & $\{q_3\}$         \\ \hline
+$\{q_4\}$         & $\emptyset$ & $\{q_2\}$           \\ \hline
+$\emptyset$     & $\emptyset$ & $\emptyset$     \\ \hline
+\end{tabular}
+\end{table}
+Anschlißend wird das neue Zustandsdiagramm des DEAs gezeichnet. \textit{qE} repräsentiert dabei die leere Menge\\
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state{q1q4}{0}{-40}
+        \state{q4}{80}{-80}
+        \state[f]{q2}{40}{-40}
+        \state{qE}{120}{0}
+        \state{q3}{80}{0}
+        \transition[line=left]{q0}{q1q4}{A}
+        \transition{q0}{q3}{B}
+        \transition[line=left]{q1q4}{q0}{A}
+        \transition{q1q4}{q2}{B}
+        \transition[line=left]{q4}{q2}{B}
+        \transition{q4}{qE}{A}
+        \transition[line=left]{q2}{q4}{A}
+        \transition{q2}{q3}{B}
+        \transition{qE}{qE}{A;B}
+        \transition{q3}{q4}{A}
+        \transition{q3}{qE}{B}
+    \end{transitiongraph}
+    \caption{Umwandlung von $\epsilon$-NEA zu DEA. Dieser ist jedoch nicht zwangsläufig optimal bzw. minimal.}
+\end{figure}
