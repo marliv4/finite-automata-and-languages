@@ -1,6 +1,7 @@
 \documentclass[12pt, oneside]{book}
 \usepackage{ngerman, amsmath, amssymb, xcolor, cancel, hyperref, float, microtype, FLaAL}
-\usepackage{lmodern, titlesec, geometry, tocloft}
+\usepackage{lmodern, titlesec, geometry, tocloft, tikz, xargs, xcolor, nicematrix}
+\usetikzlibrary{automata, arrows.meta, positioning, matrix}
 
 % Page and font styling
 \geometry{a4paper, margin=3cm}
@@ -11,9 +12,9 @@
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
-    citecolor=blue,
-    filecolor=blue,
-    urlcolor=blue
+    citecolor=black,
+    filecolor=black,
+    urlcolor=black,
 }
 
 \titleformat{\chapter}[hang]{\bfseries\huge}{\thechapter.}{1em}{}
@@ -43,17 +44,10 @@
 \cleardoublepage
 
 \include{deas_definitionen}
-\include{minimierung.tex}
+\include{minimierung}
+\include{neas}
 
-% TODO
-\chapter{Nichtdeterministische Endliche Automaten}
-\section{$\epsilon$-NEAs}
-\subsection{$\epsilon$-NEA $\rightarrow$ NEA}
+\include{regex}
 
-\include{nea_to_dea_potenzm}
-\include{eps_nea_to_dea}
-
-% TODO
-\chapter{Reguläre Ausdrücke}
-\section{RegEx $\rightarrow$ $\epsilon$-NEA (6 Konstruktionsregeln)}
+\include{q3_theo_inf_2}
 \end{document}

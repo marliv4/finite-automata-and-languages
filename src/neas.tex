@@ -1,0 +1,269 @@
+\newcommand{\enea}{$\epsilon$-NEA}
+\newcommand{\ehu}{$\epsilon$\text{-Hülle}\ }
+
+\chapter{Nichtdeterministische Endliche Automaten}
+\section[Epsilon-NEAs]{\enea s}
+\begin{definition}
+    Ein \enea\ ist ein Akzeptor, der $\epsilon$-Übergänge besitzt und deshalb mit dem leeren Wort Zustände wechseln kann.
+\end{definition}
+% Umwandlung
+\subsection[Epsilon-NEA zu NEA]{\enea $\to$ NEA}
+Gegeben sei folgendes Zustandsdiagramm eines \enea, welches in einen NEA umgewandelt werden soll:
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state{q1}{40}{0}
+        \state{q2}{80}{0}
+        \state[f]{q3}{120}{0}
+        \transition{q0}{q1}{0}
+        \transition{q1}{q1}{1}
+        \transition{q1}{q2}{}
+        \transition{q2}{q2}{0}
+        \transition{q2}{q3}{1}
+    \end{transitiongraph}
+    % \caption{eps_nea_to_nea}
+    % \label{graph:eps_nea_to_nea}
+\end{figure}
+Zuerst wird eine leere Übergangstabelle erstellt:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    Zustand & 0 & 1 \\ \hline
+    $q_0$   &   &   \\ \hline
+    $q_1$   &   &   \\ \hline
+    $q_2$   &   &   \\ \hline
+    $q_3$   &   &   \\ \hline
+    \end{tabular}
+\end{table}
+Danach wird für jedes Eingabesymbol eine Tabelle mit der $\epsilon$-Hülle erstellt:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Zustand & $\epsilon\mbox{*}$ & $0$   & $\epsilon\mbox{*}$ \\ \hline
+    $q_0$   &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+    \end{tabular}
+\end{table}
+Wie oben zu sehen ist, wird zuerst der Startzustand $q_0$ eingetragen. Danach wird die \ehu des Zustands $q_0$ berechnet und eingetragen.
+\begin{definition}
+    Eine \ehu ist die Menge aller Zustände, die ein Zustand $q_n$ mit dem leeren Wort $\epsilon$ erreichen kann.
+\end{definition}
+Da im vorigen Beispiel $q_0$ mit dem leeren Wort keinen anderen Zustand als sich selbst erreichen kann, wird für dessen \ehu $q_0$ eingetragen.\par
+Die nächte Spalte steht für den Zustand, der erreicht wird, wenn bei $q_0$ das Eingabesymbol $0$ eingegeben wird. Dies ist in diesem Beispiel der Zustand $q_1$:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Zustand & $\epsilon\mbox{*}$ & $0$   & $\epsilon\mbox{*}$ \\ \hline
+    $q_0$   & $q_0$              & $\mathbf{q_1}$ &                    \\ \hline
+            &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+    \end{tabular}
+\end{table}
+Die letzte Spalte bezieht sich auf die \ehu des Zustands aus der mittleren Spalte, welcher hier fettgedruckt steht. Die \ehu von $q_1$ ist dabei $\{q_1, q_2\}$. Diese wird ebenfalls eingetragen:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Zustand & $\epsilon\mbox{*}$ & $0$   & $\epsilon\mbox{*}$ \\ \hline
+    $q_0$   & $q_0$              & $q_1$ & $\{q_1,q_2\}$      \\ \hline
+            &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+    \end{tabular}
+\end{table}
+Diese \ehu $\{q_1, q_2\}$ repräsentiert dabei die Zustände, die $q_0$ bei der Eingabe von $0$ erreicht werden. Deshalb können diese in die Übergangstabelle eingetragen werden:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    Zustand & 0           & 1 \\ \hline
+    $q_0$   & $\{q_1,q_2\}$ &   \\ \hline
+    $q_1$   &             &   \\ \hline
+    $q_2$   &             &   \\ \hline
+    $q_3$   &             &   \\ \hline
+    \end{tabular}
+\end{table}
+Dieser Vorgang wird für alle Zustände durchgeführt, sowohl für die Eingabe von $0$ als auch von $1$. Die Tabellen sehen nach dem Algorithmus wie folgt aus:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Zustand & $\epsilon\mbox{*}$ & $0$         & $\epsilon\mbox{*}$ \\ \hline
+    $\{q_0\}$   & $\{q_0\}$              & $\{q_1\}$       & $\{q_1,q_2\}$      \\ \hline
+    $\{q_1\}$ &
+      \begin{tabular}[c]{@{}l@{}}$\{q_1\}$\\ $\{q_1,q_2\}$\end{tabular} &
+      \begin{tabular}[c]{@{}l@{}}$\emptyset$\\ $\{q_2\}$\end{tabular} &
+      \begin{tabular}[c]{@{}l@{}}$\emptyset$\\ $\{q_2\}$\end{tabular} \\ \hline
+    $\{q_2\}$   & $\{q_2\}$              & $\{q_2\}$       & $\{q_2\}$              \\ \hline
+    $\{q_3\}$   & $\{q_3\}$              & $\emptyset$ & $\emptyset$        \\ \hline
+    \end{tabular}
+\end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Zustand   & $\epsilon\mbox{*}$ & $1$         & $\epsilon\mbox{*}$ \\ \hline
+    $\{q_0\}$ & $\{q_0\}$          & $\emptyset$ & $\emptyset$        \\ \hline
+    $\{q_1\}$ &
+      \begin{tabular}[c]{@{}l@{}}$\{q_1\}$\\ $\{q_2\}$\end{tabular} &
+      \begin{tabular}[c]{@{}l@{}}$\{q_1\}$\\ $\{q_3\}$\end{tabular} &
+      \begin{tabular}[c]{@{}l@{}}$\{q_1,q_2\}$\\ $\{q_3\}$\end{tabular} \\ \hline
+    $\{q_2\}$ & $\{q_2\}$          & $\{q_3\}$   & $\{q_3\}$          \\ \hline
+    $\{q_3\}$ & $\{q_3\}$          & $\emptyset$ & $\emptyset$        \\ \hline
+    \end{tabular}
+    \end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+        \hline
+        Zustand & 0             & 1               \\ \hline
+        $\{q_0\}$   & $\{q_1,q_2\}$ & $\emptyset$     \\ \hline
+        $\{q_1\}$   & $\{q_2\}$         & $\{q_1,q_2,q_3\}$ \\ \hline
+        $\{q_2\}$   & $\{q_2\}$         & $\{q_3\}$           \\ \hline
+        $\{q_3\}$   & $\emptyset$   & $\emptyset$     \\ \hline
+    \end{tabular}
+\end{table}
+Noch sollen die Endzustände ermittelt werden. Zu den Endzuständen gehört der Endzustand aus dem \enea und die Zustände, die durch das leere Wort $\epsilon$ in den ursprünglichen Endzustand gelangen können. Deshalb wird in diesem Fall nur $q_3$ der Endzustand. Gezeichnet sieht das neue Zustandsdiagramm wie folgt aus:
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state[f]{q3}{80}{-40}
+        \state{q2}{40}{-80}
+        \state{o}{40}{-40}
+        \state{q1}{120}{-40}
+        \transition{q0}{q1}{0}
+        \transition{q0}{q2}{0}
+        \transition{q0}{o}{1}
+        \transition{q3}{o}{0;1}
+        \transition{q2}{q2}{0}
+        \transition{q2}{q3}{1}
+        \transition{q1}{q2}{0;1}
+        \transition{q1}{q1}{1}
+        \transition{q1}{q3}{1}
+    \end{transitiongraph}
+    \caption{Der neue NEA, ohne $\epsilon$-Übergänge.}
+    \label{graph:jgd}
+\end{figure}
+\glqq o\grqq\ steht hier für die leere Menge $\emptyset$.
+%
+\subsection[Epsilon-NEA zu DEA]{\enea $\to$ DEA}
+Es sei folgendes Zustandsdiagramm eines $\epsilon$-NEAs gegeben:\par
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state[f]{q2}{60}{0}
+        \state{q4}{120}{-60}
+        \state{q1}{0}{-60}
+        \state{q3}{120}{0}
+        \transition[line=left]{q0}{q1}{A}
+        \transition{q0}{q2}{}
+        \transition{q2}{q3}{;B}
+        \transition[line=left]{q2}{q4}{A}
+        \transition[line=left]{q4}{q2}{B}
+        \transition[line=left]{q1}{q0}{A}
+        \transition{q3}{q4}{A}
+    \end{transitiongraph}
+    % \caption{epsNEA}
+    \label{graph:epsNEA}
+\end{figure}
+Die Umwandlung in ein DEA geschieht wie üblich mit der Potenzmengenkonstruktion:
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Zustand         & A           & B               \\ \hline
+$\to \{q_0\}$       & $\{q_1,q_4\}$ & $\{q_3\}$           \\ \hline
+$\{q_1,q_4\}$     & $\{q_0\}$     & $\{q_2\mbox{*}\}$ \\ \hline
+$\{q_3\}$         & $\{q_4\}$     & $\emptyset$     \\ \hline
+$\{q_2\mbox{*}\}$ & $\{q_4\}$     & $\{q_3\}$         \\ \hline
+$\{q_4\}$         & $\emptyset$ & $\{q_2\}$           \\ \hline
+$\emptyset$     & $\emptyset$ & $\emptyset$     \\ \hline
+\end{tabular}
+\end{table}
+Anschlißend wird das neue Zustandsdiagramm des DEAs gezeichnet. \textit{qE} repräsentiert dabei die leere Menge $\emptyset$.\par
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state{q1q4}{0}{-40}
+        \state{q4}{80}{-80}
+        \state[f]{q2}{40}{-40}
+        \state{qE}{120}{0}
+        \state{q3}{80}{0}
+        \transition[line=left]{q0}{q1q4}{A}
+        \transition{q0}{q3}{B}
+        \transition[line=left]{q1q4}{q0}{A}
+        \transition{q1q4}{q2}{B}
+        \transition[line=left]{q4}{q2}{B}
+        \transition{q4}{qE}{A}
+        \transition[line=left]{q2}{q4}{A}
+        \transition{q2}{q3}{B}
+        \transition{qE}{qE}{A;B}
+        \transition{q3}{q4}{A}
+        \transition{q3}{qE}{B}
+    \end{transitiongraph}
+    \caption{Umwandlung von $\epsilon$-NEA zu DEA. Dieser ist jedoch nicht zwangsläufig optimal bzw. minimal.}
+\end{figure}
+\newpage
+\section[NEA zu DEA mit Potenzmengenkonstruktion]{NEA $\to$ DEA (Potenzmengenkonstruktion)}
+Dieser NEA soll in einen DEA umgewandelt werden:
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state{q1}{65}{0}
+        \state[f]{q2}{120}{0}
+        \transition{q0}{q0}{a;b}
+        \transition{q0}{q1}{b}
+        \transition{q1}{q2}{b}
+        \transition{q2}{q2}{a;b}
+    \end{transitiongraph}
+    % \caption{NEA_LaTeX}
+    \label{graph:NEA_LaTeX}
+\end{figure}
+\sloppy
+\textbf{Vorgehen}: Es wird zuerst eine Übergangstabelle aufgestellt und geschaut, welche Zustände neu auftreten.
+\fussy
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Zustand             & $a$              & $b$                   \\
+\hline
+$\to \{q_0\}$           & $\{q_0\}$           & $\{q_0,q_1\}$       \\
+\hline
+$\{q_0,q_1\}$       & $\{q_0\}$           & $\{q_0,q_1,q_2\mbox{*}\}$ \\
+\hline
+$\{q_0,q_1,q_2\}\mbox{*}$ & $\{q_0,q_2\mbox{*}\}$ & $\{q_0,q_1,q_2\mbox{*}\}$   \\
+\hline
+$\{q_0,q_2\}\mbox{*}$      & $\{q_0,q_2\mbox{*}\}$ & $\{q_0,q_1,q_2\mbox{*}\}$ \\
+\hline
+\end{tabular}
+\end{table}
+Danach wird aus dieser Übergangstabelle der DEA gezeichnet:
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state[f]{q02}{120}{-60}
+        \state{q01}{0}{-60}
+        \state[f]{q012}{60}{-60}
+        \transition{q0}{q0}{a}
+        \transition[line=left]{q0}{q01}{b}
+        \transition{q02}{q02}{a}
+        \transition[line=left]{q02}{q012}{b}
+        \transition[line=left]{q01}{q0}{a}
+        \transition{q01}{q012}{b}
+        \transition[line=left]{q012}{q02}{a}
+        \transition{q012}{q012}{b}
+    \end{transitiongraph}
+\end{figure}

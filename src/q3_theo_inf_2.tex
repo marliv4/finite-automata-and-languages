@@ -1,19 +1,29 @@
-\subsection{Formale Sprachen}
-\subsubsection{Reguläre Sprachen}
-Eine Sprache $L$ ist dann \textit{regulär}, wenn diese sich darstellen lässt mithilfe eines:
-\begin{enumerate}
-    \item deterministischen endlichen Automatens
-    \item regulären Ausdrucks
-\end{enumerate}
-
+\begin{titlepage}\centering
+    \vspace*{\fill}
+    \LARGE Teil 2: Formale Sprachen
+    \vspace*{\fill}
+\end{titlepage}
+\chapter{Formale Sprachen}
+%
+\section{Reguläre Sprachen}
+\begin{definition}
+    Eine Sprache $L$ ist dann regulär, wenn diese sich darstellen lässt mithilfe eines:
+    \begin{enumerate}
+        \item nichtdeterministischen endlichen Automatens
+        \item deterministischen endlichen Automatens
+        \item regulären Ausdrucks.
+    \end{enumerate}
+\end{definition}
 \section{Q3.2: Grammatiken}
-Eine Grammatik $G$ ist ein 4-Tupel $G=\{N,T,P,S\}$, wobei
-\begin{itemize}
-    \item $N$ das \textbf{Nichtterminalalphabet}
-    \item $T$ das \textbf{Terminalalphabet}
-    \item $P$ die \textbf{Produktionen}
-    \item $S$ das \textbf{Startsymbol} ist.
-\end{itemize}
+\begin{definition}
+    Eine Grammatik $G$ ist ein 4-Tupel $G=\{N,T,P,S\}$, wobei
+    \begin{itemize}
+        \item $N$ das \textbf{Nichtterminalalphabet}
+        \item $T$ das \textbf{Terminalalphabet}
+        \item $P$ die \textbf{Produktionen}
+        \item $S$ das \textbf{Startsymbol} ist.
+    \end{itemize}
+\end{definition}
 \subsection{Typ 3 Grammatik (regulär)}
 Eine Grammatik $G$ ist dann \textit{regulär}, wenn in den Produktionen $P$
 \begin{itemize}
@@ -23,13 +33,13 @@ Eine Grammatik $G$ ist dann \textit{regulär}, wenn in den Produktionen $P$
 \section{Ableitung}
 Gegeben sei folgende Grammatik:
 \begin{align*}
-    T &= \{x,y,z\}\\
-    N &= \{S, M, A, V\}\\
-    P &= \{\\
-        &S\rightarrow A|M|V\\
-        &A\rightarrow (S+S)\\
-        &M\rightarrow (S\cdot S)\\
-        &V\rightarrow x|y|z\\
+    &T=\{x,y,z\}\\
+    &N=\{S, M, A, V\}\\
+    &P=\{\\
+    S&\rightarrow A|M|V\\
+    A&\rightarrow (S+S)\\
+    M&\rightarrow (S\cdot S)\\
+    V&\rightarrow x|y|z\\
     &\}
 \end{align*}
 Wie wird das Wort $(x\cdot (y+z))$ gebildet?
@@ -59,10 +69,42 @@ Gegeben sei folgende kontextfreie Grammatik:
         &A\to a\\
         &B\to Bb\\
         &B\to \epsilon\\
-    \}
-\end{align*}
-\subsection{Chomsky-Normalform (klausurrelevant, abitur-irrelevant)}
+        \}
+    \end{align*}
+\subsection{Chomsky-Normalform}
 \label{cnf}
+\begin{definition}
+    Die Chomsky-Normalform ist eine Normalform für kontextfreie Grammatiken und ist die Voraussetzung für den \nameref{cyk}.
+    % \footnote{Sowohl die CNF als auch der CYK-Algorithmus sind zwar klausurrelevant, jedoch abitur-irrelevant}.
+\end{definition}
+Um eine Grammatik $G$ in die Chomsky-Normalform zu bringen, müssen 4 Regeln befolgt werden:
+\subsubsection[Epsilon-Elimination]{$\epsilon$-Elimination}
+Wenn das Startsymbol $S$ die Produktion $S\to \epsilon$ hat, so wird ein neues Startsymbol mit $S_1 \to S$ erstellt und das neue Startsymbol hat keinen $\epsilon$ mehr in der Produktion.\par
+% Außerdem will man 
+\subsection{CNF an einem Beispiel}
+\begin{align*}
+    G&=(N,T,P,S)\\
+    N&=\{S,A\}\\
+    T&=\{a\}\\
+    S&\to ASA|S|\epsilon\\
+    A&\to aa|\epsilon
+\end{align*}
+Nach der 1. Regel:
+\begin{align*}
+    S&\to S_1\\
+    S_1&\to ASA|S_1|\epsilon\\
+    A&\to aa|\epsilon
+\end{align*}
+
+Nach der 2. Regel:
+\begin{align*}
+    S&\to S_1\\
+    S_1&\to ASA|S_1\\
+    S_1&\to AS|S_1\\
+    S_1&\to AA|S_1\\
+    S_1&\to SA|S_1\\
+    A&\to aa
+\end{align*}
 \subsubsection{1. $\epsilon$-Elimination}
 Zuerst wird $B\to \epsilon$ entfernt. Die aktualisierte Grammatik lautet:
 \begin{align*}
@@ -132,8 +174,9 @@ In diesem Schritt wird die Anzahl von Nichtterminalen auf 2 reduziert, d.h. $S\t
     &V_b\to b\\
     \}
 \end{align*}
-\subsection{CYK-Algorithmus (klausurrelevant, abitur-irrelevant)}
-Mit dem CYK-Algorithmus lässt sich sagen, ob ein Wort $\omega$ in einer kontextfreien Sprache liegt. Voraussetzung für den CYK-Algorithmus ist die Chomsky-Normalform (\ref{cnf}).
+\subsection{CYK-Algorithmus}
+\label{cyk}
+Mit dem CYK-Algorithmus lässt sich sagen, ob ein Wort $\omega$ in einer kontextfreien Sprache liegt. Die Voraussetzung für den CYK-Algorithmus ist die \nameref{cnf}.
 \begin{bsp}
     Sei $G$ eine Grammatik mit Produktionsregeln $P$, die definiert sind als:
     \begin{align*}
@@ -144,3 +187,44 @@ Mit dem CYK-Algorithmus lässt sich sagen, ob ein Wort $\omega$ in einer kontext
     \end{align*}
     Nun bestimme man, ob das Wort $ababac$ in $L(G)$ liegt.
 \end{bsp}
+
+\setlength{\arraycolsep}{0pt}
+$\begin{NiceArray}
+  [columns-width=15mm, corners = NE, last-row, code-for-last-row = \color{blue}, hvlines]
+  { cccccc }
+  \RowStyle[nb-rows=6]{\rule[-2mm]{0pt}{15mm}}
+    \NotEmpty \\
+    \NotEmpty   & \NotEmpty \\
+    \NotEmpty   & \NotEmpty & \NotEmpty \\
+    \NotEmpty & \NotEmpty & \NotEmpty & \NotEmpty \\
+    \NotEmpty   & \NotEmpty & \NotEmpty & \NotEmpty & \NotEmpty \\
+    \NotEmpty           &           &           &           & \NotEmpty & \NotEmpty \\
+    % \{A\}       & \{A\}     & \{B\}     & \{B\}     & \{B\} & \{C\} \\
+    a           & b         & a         & b         & a     & c
+\CodeAfter
+  \tikz
+    \foreach \x in {1,...,6}
+       \foreach \y in {\x,...,6} 
+         { \node at (\y-|\x) [anchor=north west] {}; } ;
+        %  { \node at (\y-|\x) [anchor=north west] {\small $\x, \the\numexpr 6-\y+\x\relax$ } ; } ;
+\end{NiceArray}$\par
+Die unterste Zeile ist die 1. Zeile. Fangen wir (von links) mit dem ersten Feld der ersten Zeile, so sehen wir, dass ein Nichtterminalsymbol gesucht ist, welches das Wort \textit{a} ableitet. Schaut man auf die Grammatik, so sieht man, dass lediglich die Produktionsregel $A$ das Wort \textit{a} ableitet, weshalb sie in das untere Feld eingetragen wird:
+$\begin{NiceArray}
+  [columns-width=15mm, corners = NE, last-row, code-for-last-row = \color{blue}, hvlines]
+  { cccccc }
+  \RowStyle[nb-rows=6]{\rule[-2mm]{0pt}{15mm}}
+    \NotEmpty \\
+    \NotEmpty   & \NotEmpty \\
+    \NotEmpty   & \NotEmpty & \NotEmpty \\
+    \NotEmpty & \NotEmpty & \NotEmpty & \NotEmpty \\
+    \NotEmpty   & \NotEmpty & \NotEmpty & \NotEmpty & \NotEmpty \\
+    \NotEmpty           &           &           &           & \NotEmpty & \NotEmpty \\
+    \{A\}       & \{A\}     & \{B\}     & \{B\}     & \{B\} & \{C\} \\
+    a           & b         & a         & b         & a     & c
+\CodeAfter
+  \tikz
+    \foreach \x in {1,...,6}
+       \foreach \y in {\x,...,6} 
+         { \node at (\y-|\x) [anchor=north west] {}; } ;
+        %  { \node at (\y-|\x) [anchor=north west] {\small $\x, \the\numexpr 6-\y+\x\relax$ } ; } ;
+\end{NiceArray}$\par

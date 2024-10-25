@@ -3,7 +3,7 @@
 \chapter{Deterministische Endliche Automaten}
 \fussy
 % \section{Deterministische Endliche Automaten (DEAs)}
-\subsection{Transduktor}
+\section{Transduktor}
 \begin{definition}
 Ein Transduktorautomat $\mathcal{T}: \{\Sigma, A, Z, z_{0}, \delta, \lambda\}$ ist ein deterministicher endlicher Automat ohne einen Endzustand.
 \end{definition}
@@ -15,8 +15,12 @@ Ein Transduktorautomat $\mathcal{T}: \{\Sigma, A, Z, z_{0}, \delta, \lambda\}$ i
     \mathbf{\delta }: \Sigma \times Z \rightarrow Z &: \text{Überführungsfunktion}\\
     \mathbf{\lambda }: \Sigma \times Z \rightarrow A\text{*} &: \text{Ausgabefunktion}
 \end{align*}
-
-\subsection{Akzeptor}
+\subsection{Mealy-Automat}
+\begin{definition}
+    Ein Mealy-Automat\ \footnote{für die Klausur irrelevant.} ist ein Transduktor, dessen Ausgabe von der \textbf{Überführungsfunktion} $\delta$ und vom aktuellen \textbf{Zustand} $z_n$ abhängig ist.
+\end{definition}
+%
+\section{Akzeptor}
 \begin{definition}
 Ein Akzeptor $\mathcal{A}: \{\Sigma, Z, z_{0}, \delta, F\}$ ist ein deterministicher endlicher Automat, der die Eingabe überprüft und keine Ausgabe besitzt. Er lässt sich wie folgt beschreiben:
 \end{definition}
@@ -27,11 +31,7 @@ Ein Akzeptor $\mathcal{A}: \{\Sigma, Z, z_{0}, \delta, F\}$ ist ein deterministi
     \delta &: \text{Überführungsfunktion}\\
     F &: \text{Endzustandsmenge}
 \end{align*}
-
-\subsection{Mealy-Automat (irrelevant)}
-\begin{definition}
-    Ein Mealy-Automat ist ein Transduktor, dessen Ausgabe von der \textbf{Überführungsfunktion} $\delta$ und vom aktuellen \textbf{Zustand} $z_n$ abhängig ist.
-\end{definition}
+%
 \subsection{Moore-Automat}
 \begin{definition}
     Ein Moore-Automat ist ein Transduktor, dessen Ausgabe vom aktuellen \textbf{Zustand} $z_n$ abhängig ist.

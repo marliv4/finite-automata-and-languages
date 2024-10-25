@@ -1,0 +1,82 @@
+\chapter{Reguläre Ausdrücke}
+\begin{align*}
+    \mathbf{+} &: \text{wiederhole das Zeichen davor n-mal, wobei}\ \mathbf{n > 0}\\
+    \mathbf{*} &: \text{wiederhole das Zeichen davor n-mal, wobei}\ \mathbf{n \ge 0}
+\end{align*}
+\section[RegEx zu NEA]{RegEx $\to$ \enea}
+\subsection[Regulärer Ausdruck: Leere Menge]{$R = \emptyset$}
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{{$q_0$}}{0}{0}
+        \state[f]{{$q_1$}}{120}{0}
+        \transition{{$q_0$}}{{$q_1$}}{\ }
+    \end{transitiongraph}
+\end{figure}
+\subsection[Regulärer Ausdruck: Leeres Wort]{$R = \epsilon$}
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{{$q_0$}}{0}{0}
+        \state[f]{{$q_1$}}{120}{0}
+        \transition{{$q_0$}}{{$q_1$}}{}
+    \end{transitiongraph}
+\end{figure}
+\subsection[Regulärer Ausdruck: Eingabesymbol]{$R = a$}
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{{$q_0$}}{0}{0}
+        \state[f]{{$q_1$}}{120}{0}
+        \transition{{$q_0$}}{{$q_1$}}{a}
+    \end{transitiongraph}
+\end{figure}
+\subsection[Regulärer Ausdruck: Verkettung]{$R = ab$}
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{{$q_0$}}{0}{0}
+        \state{{$q_1$}}{40}{0}
+        \state{{$q_2$}}{80}{0}
+        \state[f]{{$q_3$}}{120}{0}
+        \transition{{$q_0$}}{{$q_1$}}{a}
+        \transition{{$q_1$}}{{$q_2$}}{}
+        \transition{{$q_2$}}{{$q_3$}}{b}
+    \end{transitiongraph}
+\end{figure}
+\subsection[Regulärer Ausdruck: Alternative]{$R = a|b$}
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{{$q_0$}}{0}{-18.667}
+        \state{{$q_1$}}{42.667}{0}
+        \state{{$q_2$}}{82.667}{0}
+        \state{{$q_3$}}{40}{-34.667}
+        \state{{$q_4$}}{80}{-34.667}
+        \state[f]{{$q_5$}}{120}{-18.667}
+        \transition{{$q_0$}}{{$q_1$}}{}
+        \transition{{$q_0$}}{{$q_3$}}{}
+        \transition{{$q_1$}}{{$q_2$}}{a}
+        \transition{{$q_2$}}{{$q_5$}}{}
+        \transition{{$q_3$}}{{$q_4$}}{b}
+        \transition{{$q_4$}}{{$q_5$}}{}
+    \end{transitiongraph}
+\end{figure}
+\subsection[Regulärer Ausdruck: N-malige Wiederholung]{$R = a^*$}
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{{$q_0$}}{0}{0}
+        \state{{$q_1$}}{73.333}{0}
+        \state[f]{{$q_3$}}{120}{-66.667}
+        \state{{$q_2$}}{120}{-3.333}
+        \transition{{$q_0$}}{{$q_1$}}{}
+        \transition{{$q_0$}}{{$q_3$}}{}
+        \transition[line=left]{{$q_1$}}{{$q_2$}}{a}
+        \transition{{$q_2$}}{{$q_3$}}{}
+        \transition[line=left]{{$q_2$}}{{$q_1$}}{}
+    \end{transitiongraph}
+\end{figure}
+\begin{bsp}
+    Es soll der reguläre Ausdruck $(0|1)^*01$ in einen $\epsilon$-NEA umgewandelt werden.
+\end{bsp}
