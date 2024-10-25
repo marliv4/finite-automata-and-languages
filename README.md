@@ -2,6 +2,10 @@
 
 This repository contains LaTeX source code based on the Hessen Informatik curriculum, covering finite automata, formal languages, and grammars.
 
+## Table of Contents
+
+![Table of Contents](./res/toc.png)
+
 ## Curriculum Coverage
 
 - **Finite Automata**: Deterministic and non-deterministic finite automata (including epsilon NFAs), state diagrams, transition tables, regular expressions, automata limitations, DFA minimization, and powerset construction.
