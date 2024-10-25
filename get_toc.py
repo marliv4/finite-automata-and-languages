@@ -7,6 +7,11 @@ def create_res():
         print("Creating ./res/ folder...")
         os.mkdir(os.path.join("./", "res/"))
 
+def to_png(output: str):
+    pages = pdf2image.convert_from_path(f"{output}.pdf", 700)
+    pages[0].save(f"{output}.png", "PNG")
+    os.remove(f"{output}.pdf")
+
 def get_toc(path: str = "./out/q3_theo_inf.pdf"):
     create_res()
     reader = PdfReader(path)
@@ -15,13 +20,12 @@ def get_toc(path: str = "./out/q3_theo_inf.pdf"):
     text = ""
     output = "./res/toc"
     for page in reader.pages:
-        text += page.extract_text() + "\n"
-        if "Inhaltsverzeichnis" in text:
+        text = page.extract_text() + "\n"
+        text = text.lower()
+        if "inhaltsverzeichnis" in text:
             writer.add_page(page)
-            writer.write(f"{output}.pdf")
-            l = pdf2image.convert_from_path(f"{output}.pdf", 700)
-            l[0].save(f"{output}.png", "PNG")
-            os.remove(f"{output}.pdf")
-            break
+        
+    writer.write(f"{output}.pdf")
+    to_png(output)
 
 get_toc()
