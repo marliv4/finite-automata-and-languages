@@ -13,11 +13,15 @@ def get_toc(path: str = "./out/q3_theo_inf.pdf"):
     writer = PdfWriter()
     
     text = ""
+    output = "./res/toc"
     for page in reader.pages:
         text += page.extract_text() + "\n"
         if "Inhaltsverzeichnis" in text:
             writer.add_page(page)
-            writer.write("./res/toc.png")
+            writer.write(f"{output}.pdf")
+            l = pdf2image.convert_from_path(f"{output}.pdf", 700)
+            l[0].save(f"{output}.png", "PNG")
+            os.remove(f"{output}.pdf")
             break
 
 get_toc()

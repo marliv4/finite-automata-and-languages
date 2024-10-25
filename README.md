@@ -4,7 +4,7 @@ This repository contains LaTeX source code based on the Hessen Informatik curric
 
 ## Table of Contents
 
-![Table of Contents](./res/toc.png)
+![Table of Contents](./res/toc.pdf)
 
 ## Curriculum Coverage
 
