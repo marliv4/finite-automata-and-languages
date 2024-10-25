@@ -10,7 +10,7 @@ This repository contains LaTeX source code based on the Hessen Informatik curric
 ## Getting Started
 
 1. Clone the repository: `git clone --depth 1 https://github.com/username/latex-automata-grammars.git`
-2. Compile the LaTeX code using your preferred editor or `pdflatex`.
+2. Compile the LaTeX code with `pdflatex`.
 
 ## License
 
