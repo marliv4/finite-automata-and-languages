@@ -1,6 +1,6 @@
 # Finite Automata, Formal Languages, and Grammars
 
-This repository contains LaTeX source code based on the Hessen Informatik curriculum, covering finite automata, formal languages, and grammars. It serves as a comprehensive resource for understanding key concepts in theoretical computer science.
+This repository contains LaTeX source code based on the Hessen Informatik curriculum, covering finite automata, formal languages, and grammars.
 
 ## Curriculum Coverage
 
