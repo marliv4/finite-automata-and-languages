@@ -15,7 +15,7 @@ If you're interested in the full Table of Contents, [go to page 3 of the PDF](./
 
 ## Getting Started
 
-1. Clone the repository: `git clone --depth 1 https://github.com/username/latex-automata-grammars.git`
+1. Clone the repository: `git clone --depth 1 https://github.com/marliv4/finite-automata-and-languages.git`
 2. Compile the LaTeX code with `pdflatex`.
 
 ## License
