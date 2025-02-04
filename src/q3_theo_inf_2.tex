@@ -77,11 +77,30 @@ Gegeben sei folgende kontextfreie Grammatik:
     Die Chomsky-Normalform ist eine Normalform für kontextfreie Grammatiken und ist die Voraussetzung für den \nameref{cyk}.
     % \footnote{Sowohl die CNF als auch der CYK-Algorithmus sind zwar klausurrelevant, jedoch abitur-irrelevant}.
 \end{definition}
+
+% \subsection{CNF an einem Beispiel}
+Gegeben sei folgende Grammatik, die in die Chomsky-Normalform gebracht werden sollte:
+\begin{align*}
+    G&=(N,T,P,S)\\
+    N&=\{A,B\}\\
+    T&=\{0\}\\
+    P&=\{\\
+    &A\to BAB|B|\epsilon\\
+    &B\to 00|\epsilon    
+    \}
+\end{align*}
 Um eine Grammatik $G$ in die Chomsky-Normalform zu bringen, müssen 4 Regeln befolgt werden:
+\begin{enumerate}
+    \item Wähle ein neues Startsymbol.
+    \item Eliminiere $\epsilon$
+    \item Eliminiere \textit{unit rules}, d.h. Nichtterminal auf ein Nichtterminal, bspw. $S\to A$
+    \item Verändere alle Regeln, wo mehr als ein Terminal vorkommt, bspw. $S\to 00$
+    \item Verändere alle Regeln, wo mehr als zwei Nichtterminale vorkommen, bspw. $S\to AB$
+\end{enumerate}
+\iffalse
 \subsubsection[Epsilon-Elimination]{$\epsilon$-Elimination}
 Wenn das Startsymbol $S$ die Produktion $S\to \epsilon$ hat, so wird ein neues Startsymbol mit $S_1 \to S$ erstellt und das neue Startsymbol hat keinen $\epsilon$ mehr in der Produktion.\par
-% Außerdem will man 
-\subsection{CNF an einem Beispiel}
+
 \begin{align*}
     G&=(N,T,P,S)\\
     N&=\{S,A\}\\
@@ -174,6 +193,7 @@ In diesem Schritt wird die Anzahl von Nichtterminalen auf 2 reduziert, d.h. $S\t
     &V_b\to b\\
     \}
 \end{align*}
+\fi
 \subsection{CYK-Algorithmus}
 \label{cyk}
 Mit dem CYK-Algorithmus lässt sich sagen, ob ein Wort $\omega$ in einer kontextfreien Sprache liegt. Die Voraussetzung für den CYK-Algorithmus ist die \nameref{cnf}.

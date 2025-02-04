@@ -2,7 +2,30 @@
 \usepackage{ngerman, amsmath, amssymb, xcolor, cancel, hyperref, float, microtype, FLaAL}
 \usepackage{lmodern, titlesec, geometry, tocloft, tikz, xargs, xcolor, nicematrix}
 \usetikzlibrary{automata, arrows.meta, positioning, matrix}
+\usepackage{listings}
+\usepackage{subfiles}
+\usepackage{color}
 
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}    
 % Page and font styling
 \geometry{a4paper, margin=3cm}
 \setlength{\parskip}{0.5em} % Space between paragraphs
@@ -11,17 +34,17 @@
 
 \hypersetup{
     colorlinks=true,
-    linkcolor=blue,
+    linkcolor=black,
     citecolor=black,
     filecolor=black,
     urlcolor=black,
 }
-
+    
 \titleformat{\chapter}[hang]{\bfseries\huge}{\thechapter.}{1em}{}
 \titleformat{\section}[hang]{\bfseries\Large}{\thesection}{1em}{}
 \titleformat{\subsection}[hang]{\bfseries\large}{\thesubsection}{1em}{}
 \titleformat{\subsubsection}[hang]{\bfseries\normalsize}{\thesubsubsection}{1em}{}
-
+    
 \renewcommand{\cftchapfont}{\normalfont\bfseries}
 \renewcommand{\cftsecfont}{\normalfont}
 \renewcommand{\cftsubsecfont}{\normalfont}
@@ -30,23 +53,851 @@
 \renewcommand{\cftsubsecpagefont}{\normalfont}
 \setlength{\cftbeforechapskip}{1em} % Add spacing between chapters in TOC
 \setlength{\cftbeforesecskip}{0.5em} % Add spacing between sections in TOC
-
 \newtheorem{bsp}{Beispiel}
 \newtheorem{definition}{Definition}
-
+    
 \author{Marko Livajusic}
 \date{\today}
 \title{Theoretische Informatik: Endliche Automaten, Formale Sprachen und Grammatiken}
-
+    
 \begin{document}
 \maketitle
 \tableofcontents
 \cleardoublepage
+\chapter{Höhere Datenstrukturen}
+\section{Binärbaum}
+\subsection{Einfügen}
+\begin{lstlisting}
+public void insert(int value) {
+    if (root == null) {
+        root = new Node(value);
+        return;
+    }
+            
+    Node it = root, parent = null;
+            
+    while (it != null) {
+        parent = it;
+        // gehe rechts
+        if (value > it.value) {
+                it = it.right;
+        } else if (value < it.value) { // gehe links
+            it = it.left;
+        }
+    }
+                    
+    Node n = new Node(value);
+    if (parent.value > value) {
+        parent.left = n;
+    } else if (parent.value < value) {
+        parent.right = n;
+    }
+                            
+}
+\end{lstlisting}
+\chapter{Automaten}
+\section{Transduktor}
+\begin{definition}
+Ein Transduktorautomat $\mathcal{T}: \{\Sigma, A, Z, z_{0}, \delta, \lambda\}$ ist ein deterministicher endlicher Automat ohne einen Endzustand.
+\end{definition}
+\begin{align*}
+    \mathbf{\Sigma} &: \text{Eingabealphabet}\\
+    \mathbf{A} &: \text{Ausgabealphabet}\\
+    \mathbf{Z} &: \text{Zustandsmenge}\\
+    \mathbf{z_{0}} \in Z &: \text{Startzustand}\\
+    \mathbf{\delta }: \Sigma \times Z \rightarrow Z &: \text{Überführungsfunktion}\\
+    \mathbf{\lambda }: \Sigma \times Z \rightarrow A\text{*} &: \text{Ausgabefunktion}
+\end{align*}
+\subsection{Mealy-Automat}
+\begin{definition}
+    Ein Mealy-Automat\ \footnote{für die Klausur irrelevant.} ist ein Transduktor, dessen Ausgabe von der \textbf{Überführungsfunktion} $\delta$ und vom aktuellen \textbf{Zustand} $z_n$ abhängig ist.
+\end{definition}
+%
+\section{Akzeptor}
+\begin{definition}
+Ein Akzeptor $\mathcal{A}: \{\Sigma, Z, z_{0}, \delta, F\}$ ist ein deterministicher endlicher Automat, der die Eingabe überprüft und keine Ausgabe besitzt. Er lässt sich wie folgt beschreiben:
+\end{definition}
+    \begin{align*}
+    \Sigma &: \text{Eingabealphabet}\\
+    Z &: \text{Zustandsmenge}\\
+    z_{0} &: \text{Startzustand}\\
+    \delta &: \text{Überführungsfunktion}\\
+    F &: \text{Endzustandsmenge}
+\end{align*}
+%
+\subsection{Moore-Automat}
+\begin{definition}
+    Ein Moore-Automat ist ein Transduktor, dessen Ausgabe vom aktuellen \textbf{Zustand} $z_n$ abhängig ist.
+\end{definition}
+\subsection{Minimierung von DEAs}
+Zu minimieren sei folgender DEA:\par
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{-23.333}
+        \state{q1}{53.333}{0}
+        \state{q2}{50}{-53.333}
+        \state[f]{q3}{120}{-23.333}
+        \transition{q0}{q1}{0}
+        \transition{q0}{q2}{1}
+        \transition[line=left]{q1}{q2}{0}
+        \transition{q1}{q3}{1}
+        \transition[line=left]{q2}{q1}{0}
+        \transition{q2}{q3}{1}
+        \transition{q3}{q3}{0;1}
+    \end{transitiongraph}
+\end{figure}
+Diagonale als äquivalent markieren:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    Zustand    & $q_0$       & $q_1$    & $q_2$    & $q_3$       \\ \hline
+    $q_0$      & $\equiv$ &          &          &          \\ \hline
+    $q_1$      &          & $\equiv$ &          &          \\ \hline
+    $q_2$      &          &          & $\equiv$ &          \\ \hline
+    $q_3$      &          &          &          & $\equiv$ \\ \hline
+    \end{tabular}
+\end{table}
+Felder, wo ein Zustand auf einen Endzustand trifft, streichen
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    Zustand    & $q_0$    & $q_1$    & $q_2$    & $q_3$    \\ \hline
+    $q_0$      & $\equiv$ &          &          &          \\ \hline
+    $q_1$      &          & $\equiv$ &          &          \\ \hline
+    $q_2$      &          &          & $\equiv$ &          \\ \hline
+    $q_3$      &   X      &   X      &    X     & $\equiv$ \\ \hline
+    \end{tabular}
+\end{table}
+Eine Übergangstabelle mit übrigen Zuständen erstellen. Die Zustandspaare, die auf einen bereits gestrichenen Zustandspaar abgebildet werden, streichen
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    Zustand      & 0           & 1           \\ \hline
+    $\color{red}(q_0,q_1)$  & $(q_1,q_2)$ & $\mathbf{(q_2,q_3)}$ \\ \hline
+    $\color{red}(q_0,q_2)$  & $(q_1,q_1)$ & $\mathbf{(q_2,q_3)}$ \\ \hline
+    % $\color{red}(q_0,q_3)$  & $(q_1,q_3)$ & $\mathbf{(q_2,q_3)}$ \\ \hline
+    $(q_1,q_2)$  & $(q_2,q_1)$ & $(q_3,q_3)$ \\ \hline
+    \end{tabular}
+\end{table}
+Die neue Tabelle sieht dann so aus:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    Zustand    & $q_0$    &     $q_1$       & $q_2$    & $q_3$    \\ \hline
+    $q_0$      & $\equiv$ &                 &          &          \\ \hline
+    $q_1$      &    X     &     $\equiv$    &          &          \\ \hline
+    $q_2$      &    X     &                 & $\equiv$ &          \\ \hline
+    $q_3$      &    X     &     X           &    X     & $\equiv$ \\ \hline
+    \end{tabular}
+\end{table}
+Die leeren Felder als äquivalent markieren:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    Zustand    & $q_0$    &     $q_1$       & $q_2$    & $q_3$    \\ \hline
+    $q_0$      & $\equiv$ &                 &          &          \\ \hline
+    $q_1$      &    X     &     $\equiv$    &          &          \\ \hline
+    $q_2$      &    X     &     $\equiv$    & $\equiv$ &          \\ \hline
+    $q_3$      &    X     &     X           &    X     & $\equiv$ \\ \hline
+    \end{tabular}
+\end{table}
+Spaltenweise die Zustände zusammenfassen:
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{-12}
+        \state{q1q2}{64}{0}
+        \state[f]{q3}{120}{-24}
+        \transition{q0}{q1q2}{0;1}
+        \transition{q1q2}{q3}{1}
+        \transition{q1q2}{q1q2}{0}
+        \transition{q3}{q3}{0;1}
+    \end{transitiongraph}
+\end{figure}
+\newcommand{\enea}{$\epsilon$-NEA}
+\newcommand{\ehu}{$\epsilon$\text{-Hülle}\ }
 
-\include{deas_definitionen}
-\include{minimierung}
-\include{neas}
+\chapter{Nichtdeterministische Endliche Automaten}
+\section[Epsilon-NEAs]{\enea s}
+\begin{definition}
+    Ein \enea\ ist ein Akzeptor, der $\epsilon$-Übergänge besitzt und deshalb mit dem leeren Wort Zustände wechseln kann.
+\end{definition}
+% Umwandlung
+\subsection[Epsilon-NEA zu NEA]{\enea $\to$ NEA}
+Gegeben sei folgendes Zustandsdiagramm eines \enea, welches in einen NEA umgewandelt werden soll:
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state{q1}{40}{0}
+        \state{q2}{80}{0}
+        \state[f]{q3}{120}{0}
+        \transition{q0}{q1}{0}
+        \transition{q1}{q1}{1}
+        \transition{q1}{q2}{}
+        \transition{q2}{q2}{0}
+        \transition{q2}{q3}{1}
+    \end{transitiongraph}
+    % \caption{eps_nea_to_nea}
+    % \label{graph:eps_nea_to_nea}
+\end{figure}
+Zuerst wird eine leere Übergangstabelle erstellt:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    Zustand & 0 & 1 \\ \hline
+    $q_0$   &   &   \\ \hline
+    $q_1$   &   &   \\ \hline
+    $q_2$   &   &   \\ \hline
+    $q_3$   &   &   \\ \hline
+    \end{tabular}
+\end{table}
+Danach wird für jedes Eingabesymbol eine Tabelle mit der $\epsilon$-Hülle erstellt:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Zustand & $\epsilon\mbox{*}$ & $0$   & $\epsilon\mbox{*}$ \\ \hline
+    $q_0$   &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+    \end{tabular}
+\end{table}
+Wie oben zu sehen ist, wird zuerst der Startzustand $q_0$ eingetragen. Danach wird die \ehu des Zustands $q_0$ berechnet und eingetragen.
+\begin{definition}
+    Eine \ehu ist die Menge aller Zustände, die ein Zustand $q_n$ mit dem leeren Wort $\epsilon$ erreichen kann.
+\end{definition}
+Da im vorigen Beispiel $q_0$ mit dem leeren Wort keinen anderen Zustand als sich selbst erreichen kann, wird für dessen \ehu $q_0$ eingetragen.\par
+Die nächte Spalte steht für den Zustand, der erreicht wird, wenn bei $q_0$ das Eingabesymbol $0$ eingegeben wird. Dies ist in diesem Beispiel der Zustand $q_1$:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Zustand & $\epsilon\mbox{*}$ & $0$   & $\epsilon\mbox{*}$ \\ \hline
+    $q_0$   & $q_0$              & $\mathbf{q_1}$ &                    \\ \hline
+            &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+    \end{tabular}
+\end{table}
+Die letzte Spalte bezieht sich auf die \ehu des Zustands aus der mittleren Spalte, welcher hier fettgedruckt steht. Die \ehu von $q_1$ ist dabei $\{q_1, q_2\}$. Diese wird ebenfalls eingetragen:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Zustand & $\epsilon\mbox{*}$ & $0$   & $\epsilon\mbox{*}$ \\ \hline
+    $q_0$   & $q_0$              & $q_1$ & $\{q_1,q_2\}$      \\ \hline
+            &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+            &                    &       &                    \\ \hline
+    \end{tabular}
+\end{table}
+Diese \ehu $\{q_1, q_2\}$ repräsentiert dabei die Zustände, die $q_0$ bei der Eingabe von $0$ erreicht werden. Deshalb können diese in die Übergangstabelle eingetragen werden:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    Zustand & 0           & 1 \\ \hline
+    $q_0$   & $\{q_1,q_2\}$ &   \\ \hline
+    $q_1$   &             &   \\ \hline
+    $q_2$   &             &   \\ \hline
+    $q_3$   &             &   \\ \hline
+    \end{tabular}
+\end{table}
+Dieser Vorgang wird für alle Zustände durchgeführt, sowohl für die Eingabe von $0$ als auch von $1$. Die Tabellen sehen nach dem Algorithmus wie folgt aus:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Zustand & $\epsilon\mbox{*}$ & $0$         & $\epsilon\mbox{*}$ \\ \hline
+    $\{q_0\}$   & $\{q_0\}$              & $\{q_1\}$       & $\{q_1,q_2\}$      \\ \hline
+    $\{q_1\}$ &
+      \begin{tabular}[c]{@{}l@{}}$\{q_1\}$\\ $\{q_1,q_2\}$\end{tabular} &
+      \begin{tabular}[c]{@{}l@{}}$\emptyset$\\ $\{q_2\}$\end{tabular} &
+      \begin{tabular}[c]{@{}l@{}}$\emptyset$\\ $\{q_2\}$\end{tabular} \\ \hline
+    $\{q_2\}$   & $\{q_2\}$              & $\{q_2\}$       & $\{q_2\}$              \\ \hline
+    $\{q_3\}$   & $\{q_3\}$              & $\emptyset$ & $\emptyset$        \\ \hline
+    \end{tabular}
+\end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Zustand   & $\epsilon\mbox{*}$ & $1$         & $\epsilon\mbox{*}$ \\ \hline
+    $\{q_0\}$ & $\{q_0\}$          & $\emptyset$ & $\emptyset$        \\ \hline
+    $\{q_1\}$ &
+      \begin{tabular}[c]{@{}l@{}}$\{q_1\}$\\ $\{q_2\}$\end{tabular} &
+      \begin{tabular}[c]{@{}l@{}}$\{q_1\}$\\ $\{q_3\}$\end{tabular} &
+      \begin{tabular}[c]{@{}l@{}}$\{q_1,q_2\}$\\ $\{q_3\}$\end{tabular} \\ \hline
+    $\{q_2\}$ & $\{q_2\}$          & $\{q_3\}$   & $\{q_3\}$          \\ \hline
+    $\{q_3\}$ & $\{q_3\}$          & $\emptyset$ & $\emptyset$        \\ \hline
+    \end{tabular}
+    \end{table}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+        \hline
+        Zustand & 0             & 1               \\ \hline
+        $\{q_0\}$   & $\{q_1,q_2\}$ & $\emptyset$     \\ \hline
+        $\{q_1\}$   & $\{q_2\}$         & $\{q_1,q_2,q_3\}$ \\ \hline
+        $\{q_2\}$   & $\{q_2\}$         & $\{q_3\}$           \\ \hline
+        $\{q_3\}$   & $\emptyset$   & $\emptyset$     \\ \hline
+    \end{tabular}
+\end{table}
+Noch sollen die Endzustände ermittelt werden. Zu den Endzuständen gehört der Endzustand aus dem \enea und die Zustände, die durch das leere Wort $\epsilon$ in den ursprünglichen Endzustand gelangen können. Deshalb wird in diesem Fall nur $q_3$ der Endzustand. Gezeichnet sieht das neue Zustandsdiagramm wie folgt aus:
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state[f]{q3}{80}{-40}
+        \state{q2}{40}{-80}
+        \state{o}{40}{-40}
+        \state{q1}{120}{-40}
+        \transition{q0}{q1}{0}
+        \transition{q0}{q2}{0}
+        \transition{q0}{o}{1}
+        \transition{q3}{o}{0;1}
+        \transition{q2}{q2}{0}
+        \transition{q2}{q3}{1}
+        \transition{q1}{q2}{0;1}
+        \transition{q1}{q1}{1}
+        \transition{q1}{q3}{1}
+    \end{transitiongraph}
+    \caption{Der neue NEA, ohne $\epsilon$-Übergänge.}
+    \label{graph:jgd}
+\end{figure}
+\glqq o\grqq\ steht hier für die leere Menge $\emptyset$.
+%
+\subsection[Epsilon-NEA zu DEA]{\enea $\to$ DEA}
+Es sei folgendes Zustandsdiagramm eines $\epsilon$-NEAs gegeben:\par
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state[f]{q2}{60}{0}
+        \state{q4}{120}{-60}
+        \state{q1}{0}{-60}
+        \state{q3}{120}{0}
+        \transition[line=left]{q0}{q1}{A}
+        \transition{q0}{q2}{}
+        \transition{q2}{q3}{;B}
+        \transition[line=left]{q2}{q4}{A}
+        \transition[line=left]{q4}{q2}{B}
+        \transition[line=left]{q1}{q0}{A}
+        \transition{q3}{q4}{A}
+    \end{transitiongraph}
+    % \caption{epsNEA}
+    \label{graph:epsNEA}
+\end{figure}
+Die Umwandlung in ein DEA geschieht wie üblich mit der Potenzmengenkonstruktion:
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Zustand         & A           & B               \\ \hline
+$\to \{q_0\}$       & $\{q_1,q_4\}$ & $\{q_3\}$           \\ \hline
+$\{q_1,q_4\}$     & $\{q_0\}$     & $\{q_2\mbox{*}\}$ \\ \hline
+$\{q_3\}$         & $\{q_4\}$     & $\emptyset$     \\ \hline
+$\{q_2\mbox{*}\}$ & $\{q_4\}$     & $\{q_3\}$         \\ \hline
+$\{q_4\}$         & $\emptyset$ & $\{q_2\}$           \\ \hline
+$\emptyset$     & $\emptyset$ & $\emptyset$     \\ \hline
+\end{tabular}
+\end{table}
+Anschlißend wird das neue Zustandsdiagramm des DEAs gezeichnet. \textit{qE} repräsentiert dabei die leere Menge $\emptyset$.\par
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state{q1q4}{0}{-40}
+        \state{q4}{80}{-80}
+        \state[f]{q2}{40}{-40}
+        \state{qE}{120}{0}
+        \state{q3}{80}{0}
+        \transition[line=left]{q0}{q1q4}{A}
+        \transition{q0}{q3}{B}
+        \transition[line=left]{q1q4}{q0}{A}
+        \transition{q1q4}{q2}{B}
+        \transition[line=left]{q4}{q2}{B}
+        \transition{q4}{qE}{A}
+        \transition[line=left]{q2}{q4}{A}
+        \transition{q2}{q3}{B}
+        \transition{qE}{qE}{A;B}
+        \transition{q3}{q4}{A}
+        \transition{q3}{qE}{B}
+    \end{transitiongraph}
+    \caption{Umwandlung von $\epsilon$-NEA zu DEA. Dieser ist jedoch nicht zwangsläufig optimal bzw. minimal.}
+\end{figure}
+\newpage
+\section[NEA zu DEA mit Potenzmengenkonstruktion]{NEA $\to$ DEA (Potenzmengenkonstruktion)}
+Dieser NEA soll in einen DEA umgewandelt werden:
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state{q1}{65}{0}
+        \state[f]{q2}{120}{0}
+        \transition{q0}{q0}{a;b}
+        \transition{q0}{q1}{b}
+        \transition{q1}{q2}{b}
+        \transition{q2}{q2}{a;b}
+    \end{transitiongraph}
+    % \caption{NEA_LaTeX}
+    \label{graph:NEA_LaTeX}
+\end{figure}
+\sloppy
+\textbf{Vorgehen}: Es wird zuerst eine Übergangstabelle aufgestellt und geschaut, welche Zustände neu auftreten.
+\fussy
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Zustand             & $a$              & $b$                   \\
+\hline
+$\to \{q_0\}$           & $\{q_0\}$           & $\{q_0,q_1\}$       \\
+\hline
+$\{q_0,q_1\}$       & $\{q_0\}$           & $\{q_0,q_1,q_2\mbox{*}\}$ \\
+\hline
+$\{q_0,q_1,q_2\}\mbox{*}$ & $\{q_0,q_2\mbox{*}\}$ & $\{q_0,q_1,q_2\mbox{*}\}$   \\
+\hline
+$\{q_0,q_2\}\mbox{*}$      & $\{q_0,q_2\mbox{*}\}$ & $\{q_0,q_1,q_2\mbox{*}\}$ \\
+\hline
+\end{tabular}
+\end{table}
+Danach wird aus dieser Übergangstabelle der DEA gezeichnet:
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{q0}{0}{0}
+        \state[f]{q02}{120}{-60}
+        \state{q01}{0}{-60}
+        \state[f]{q012}{60}{-60}
+        \transition{q0}{q0}{a}
+        \transition[line=left]{q0}{q01}{b}
+        \transition{q02}{q02}{a}
+        \transition[line=left]{q02}{q012}{b}
+        \transition[line=left]{q01}{q0}{a}
+        \transition{q01}{q012}{b}
+        \transition[line=left]{q012}{q02}{a}
+        \transition{q012}{q012}{b}
+    \end{transitiongraph}
+\end{figure}
+\chapter{Reguläre Ausdrücke}
+\begin{align*}
+    \mathbf{+} &: \text{wiederhole das Zeichen davor n-mal, wobei}\ \mathbf{n > 0}\\
+    \mathbf{*} &: \text{wiederhole das Zeichen davor n-mal, wobei}\ \mathbf{n \ge 0}
+\end{align*}
+\section[RegEx zu NEA]{RegEx $\to$ \enea}
+\subsection[Regulärer Ausdruck: Leere Menge]{$R = \emptyset$}
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{{$q_0$}}{0}{0}
+        \state[f]{{$q_1$}}{120}{0}
+        \transition{{$q_0$}}{{$q_1$}}{\ }
+    \end{transitiongraph}
+\end{figure}
+\subsection[Regulärer Ausdruck: Leeres Wort]{$R = \epsilon$}
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{{$q_0$}}{0}{0}
+        \state[f]{{$q_1$}}{120}{0}
+        \transition{{$q_0$}}{{$q_1$}}{}
+    \end{transitiongraph}
+\end{figure}
+\subsection[Regulärer Ausdruck: Eingabesymbol]{$R = a$}
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{{$q_0$}}{0}{0}
+        \state[f]{{$q_1$}}{120}{0}
+        \transition{{$q_0$}}{{$q_1$}}{a}
+    \end{transitiongraph}
+\end{figure}
+\subsection[Regulärer Ausdruck: Verkettung]{$R = ab$}
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{{$q_0$}}{0}{0}
+        \state{{$q_1$}}{40}{0}
+        \state{{$q_2$}}{80}{0}
+        \state[f]{{$q_3$}}{120}{0}
+        \transition{{$q_0$}}{{$q_1$}}{a}
+        \transition{{$q_1$}}{{$q_2$}}{}
+        \transition{{$q_2$}}{{$q_3$}}{b}
+    \end{transitiongraph}
+\end{figure}
+\subsection[Regulärer Ausdruck: Alternative]{$R = a|b$}
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{{$q_0$}}{0}{-18.667}
+        \state{{$q_1$}}{42.667}{0}
+        \state{{$q_2$}}{82.667}{0}
+        \state{{$q_3$}}{40}{-34.667}
+        \state{{$q_4$}}{80}{-34.667}
+        \state[f]{{$q_5$}}{120}{-18.667}
+        \transition{{$q_0$}}{{$q_1$}}{}
+        \transition{{$q_0$}}{{$q_3$}}{}
+        \transition{{$q_1$}}{{$q_2$}}{a}
+        \transition{{$q_2$}}{{$q_5$}}{}
+        \transition{{$q_3$}}{{$q_4$}}{b}
+        \transition{{$q_4$}}{{$q_5$}}{}
+    \end{transitiongraph}
+\end{figure}
+\subsection[Regulärer Ausdruck: N-malige Wiederholung]{$R = a^*$}
+\begin{figure}[H]
+    \centering
+    \begin{transitiongraph}[fa]
+        \state[s]{{$q_0$}}{0}{0}
+        \state{{$q_1$}}{73.333}{0}
+        \state[f]{{$q_3$}}{120}{-66.667}
+        \state{{$q_2$}}{120}{-3.333}
+        \transition{{$q_0$}}{{$q_1$}}{}
+        \transition{{$q_0$}}{{$q_3$}}{}
+        \transition[line=left]{{$q_1$}}{{$q_2$}}{a}
+        \transition{{$q_2$}}{{$q_3$}}{}
+        \transition[line=left]{{$q_2$}}{{$q_1$}}{}
+    \end{transitiongraph}
+\end{figure}
+\begin{bsp}
+    Es soll der reguläre Ausdruck $(0|1)^*01$ in einen $\epsilon$-NEA umgewandelt werden.
+\end{bsp}
+\begin{titlepage}\centering
+    \vspace*{\fill}
+    \LARGE Teil 2: Formale Sprachen
+    \vspace*{\fill}
+\end{titlepage}
+\chapter{Formale Sprachen}
+\section{Reguläre Sprachen}
+\begin{definition}
+    Eine Sprache $L$ ist dann regulär, wenn diese sich darstellen lässt mithilfe eines:
+    \begin{enumerate}
+        \item nichtdeterministischen endlichen Automatens
+        \item deterministischen endlichen Automatens
+        \item regulären Ausdrucks.
+    \end{enumerate}
+\end{definition}
+\section{Q3.2: Grammatiken}
+\begin{definition}
+    Eine Grammatik $G$ ist ein 4-Tupel $G=\{N,T,P,S\}$, wobei
+    \begin{itemize}
+        \item $N$ das \textbf{Nichtterminalalphabet}
+        \item $T$ das \textbf{Terminalalphabet}
+        \item $P$ die \textbf{Produktionen}
+        \item $S$ das \textbf{Startsymbol} ist.
+    \end{itemize}
+\end{definition}
+\subsection{Typ 3 Grammatik (regulär)}
+\begin{definition}
+    Eine reguläre Grammatik $G$ ist eine kontextfreie Grammatik, die zusätzlichen Einschränkungen unterliegt. Diese zeichnet sich dadurch, dass in allen Produktionen immer genau ein Nichtterminal ersetzt werden kann durch genau ein Nichtterminal oder genau ein Terminal oder genau ein Nichtterminal, verknüpft mit genau einem Terminal:
+\end{definition}
+    \begin{align*}
+    &A\to aB\\
+    &S\to aS\\
+    &Y\to bS
+\end{align*}
+In den regulären Grammatiken wird dabei zwischen \textit{linksregulären} und \textit{rechtsregulären} Grammatiken unterschieden.\par
+\begin{definition}
+    Eine Grammatik $G$ ist dann \textbf{linksregulär}, wenn die rechte Seite einer Produktion nur das leere Wort, ein Terminalsymbol oder ein Nichtterminalsymbol gefolgt von einem Terminalsymbol hat. Die Wörter werden von links gebildet:
+    \begin{align*}
+        &A\to Ba\\
+        &A\to a|\epsilon
+    \end{align*}
+\end{definition}
+\begin{definition}
+    Eine Grammatik $G$ ist dann \textbf{rechtsregulär}, wenn die rechte Seite einer Produktion nur das leere Wort, ein Terminalsymbol oder ein Terminalsymbol gefolgt von einem Nichtterminalsymbol hat. Die Wörter werden von rechts gebildet:
+    \begin{align*}
+        &A\to aB\\
+        &A\to a|\epsilon
+    \end{align*}
+\end{definition}
+Eine Grammatik $G$ ist dann \textit{rechtsregulär}, wenn
+\section{Ableitung}
+Gegeben sei folgende Grammatik:
+\begin{align*}
+    &T=\{x,y,z\}\\
+    &N=\{S, M, A, V\}\\
+    &P=\{\\
+    &S\rightarrow A|M|V\\
+    &A\rightarrow (S+S)\\
+    &M\rightarrow (S\cdot S)\\
+    &V\rightarrow x|y|z\\
+    &\}
+\end{align*}
+Wie wird das Wort $(x\cdot (y+z))$ gebildet?
+\begin{align*}
+    S\Rightarrow M\Rightarrow (S\cdot S)\\
+    \Rightarrow (v\cdot S)\Rightarrow (x\cdot S)\Rightarrow (x\cdot A)\Rightarrow\\ (x\cdot (S+S))\Rightarrow (x\cdot (v + S))\Rightarrow (x\cdot (y + S))\Rightarrow (x\cdot (y + v))\Rightarrow (x\cdot (y + z))
+\end{align*}
+\subsection{Ableitungsbaum}
+Dies kann man auch mit einem Ableitungsbaum darstellen:
+\subsection{Syntaxdiagramme: Regeln}
+\begin{enumerate}
+    \item $1$ Syntaxdiagramm $\hat{=}\ 1\ $ Produktionsregel, wobei das Syntaxdiagramm der Name der Produktionsregel ist
+    \item Nichtterminale: eckig
+    \item Terminale: rund
+\end{enumerate}
 
-\include{regex}
-% \include{q3_theo_inf_2}
+\section{Kontextfreie Sprachen}
+Gegeben sei folgende kontextfreie Grammatik:
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P&=\{\\
+        &S\to AB\\
+        &S\to ABA\\
+        &A\to aA\\
+        &A\to a\\
+        &B\to Bb\\
+        &B\to \epsilon\\
+        \}
+    \end{align*}
+\subsection{Chomsky-Normalform}
+\label{cnf}
+\begin{definition}
+    Die Chomsky-Normalform ist eine Normalform für kontextfreie Grammatiken und ist die Voraussetzung für den \nameref{cyk}.
+    % \footnote{Sowohl die CNF als auch der CYK-Algorithmus sind zwar klausurrelevant, jedoch abitur-irrelevant}.
+\end{definition}
+
+% \subsection{CNF an einem Beispiel}
+Gegeben sei folgende Grammatik, die in die Chomsky-Normalform gebracht werden sollte:
+\begin{align*}
+    G&=(N,T,P,S)\\
+    N&=\{A,B\}\\
+    T&=\{0\}\\
+    P&=\{\\
+    &A\to BAB|B|\epsilon\\
+    &B\to 00|\epsilon\\    
+    \}
+\end{align*}
+Um eine Grammatik $G$ in die Chomsky-Normalform zu bringen, müssen 4 Regeln befolgt werden:
+\begin{enumerate}
+    \item Wähle ein neues Startsymbol.
+    \item Eliminiere $\epsilon$-Regeln.
+    \item Eliminiere \textit{unit rules}, d.h. Nichtterminal auf ein Nichtterminal, bspw. $S\to A$.
+    \item Jedes Terminalzeichen, das in Kombination mit einem Nichtterminalzeichen auftaucht, wird durch ein Nichtterminalzeichen $V_a$ ersetzt.
+    \item Verändere alle Regeln, wo mehr als zwei Nichtterminale vorkommen, bspw. $S\to AB$.
+\end{enumerate}
+\iffalse
+\subsubsection[Epsilon-Elimination]{$\epsilon$-Elimination}
+Wenn das Startsymbol $S$ die Produktion $S\to \epsilon$ hat, so wird ein neues Startsymbol mit $S_1 \to S$ erstellt und das neue Startsymbol hat keinen $\epsilon$ mehr in der Produktion.\par
+
+\begin{align*}
+    G&=(N,T,P,S)\\
+    N&=\{S,A\}\\
+    T&=\{a\}\\
+    S&\to ASA|S|\epsilon\\
+    A&\to aa|\epsilon
+\end{align*}
+Nach der 1. Regel:
+\begin{align*}
+    S&\to S_1\\
+    S_1&\to ASA|S_1|\epsilon\\
+    A&\to aa|\epsilon
+\end{align*}
+
+Nach der 2. Regel:
+\begin{align*}
+    S&\to S_1\\
+    S_1&\to ASA|S_1\\
+    S_1&\to AS|S_1\\
+    S_1&\to AA|S_1\\
+    S_1&\to SA|S_1\\
+    A&\to aa
+\end{align*}
+\subsubsection{1. $\epsilon$-Elimination}
+Zuerst wird $B\to \epsilon$ entfernt. Die aktualisierte Grammatik lautet:
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P=\{\\
+    &S\to AB\\
+    &\mathbf{S\to A}\\
+    &\mathbf{S\to AA}\\
+    &A\to aA\\
+    &A\to a\\
+    &B\to b\\
+    \}
+\end{align*}
+\subsubsection{2. Elimination von Kettenregeln}
+Die Kettenregeln, d.h. überall da, wo ein Nichtterminal auf ein anderes Nichtterminal folgt, d.h. $S\to A$, werden entfernt.
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P=\{\\
+    &S\to AB\\
+    &S\to AA\\
+    &A\to aA\\
+    &A\to a\\
+    &B\to b\\
+    \}
+\end{align*}
+\subsubsection{3. Separation von Terminalzeichen}
+Jedes Terminal wird durch ein Nichtterminal ersetzt:
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P=\{\\
+    &S\to AB\\
+    &S\to aA \quad |\ V_a = a\\
+    &S\to V_{a}A\\
+    &S\to a\\
+    &S\to ABA\\
+    &S\to AA\\
+    &A\to a\\
+    &B\to BV_b\\
+    &B\to b\\
+    &V_a\to a\\
+    &V_b\to b\\
+    \}
+\end{align*}
+\subsubsection{4. Elimination von mehrelementigen Nonterminalketten}
+In diesem Schritt wird die Anzahl von Nichtterminalen auf 2 reduziert, d.h. $S\to ABA$ wird zu $S\to S_2A$, wobei $S_2$ als $S_2\to AB$ definiert wird.
+\begin{align*}
+    N&=\{A,B,S\}\\
+    T&=\{a,b,\epsilon\}\\
+    S&=S\\
+    P=\{\\
+    &S\to AB\\
+    &S\to V_{a}A\\
+    &S\to a\\
+    &\mathbf{S\to S_2A}\\
+    S_2\to AB
+    &S\to AA\\
+    &A\to a\\
+    &B\to BV_b\\
+    &B\to b\\
+    &V_a\to a\\
+    &V_b\to b\\
+    \}
+\end{align*}
+\fi
+\subsection{CYK-Algorithmus}
+\label{cyk}
+Mit dem CYK-Algorithmus lässt sich sagen, ob ein Wort $\omega$ in einer kontextfreien Sprache liegt. Die Voraussetzung für den CYK-Algorithmus ist die \nameref{cnf}.
+\begin{bsp}
+    Sei $G$ eine Grammatik mit Produktionsregeln $P$, die definiert sind als:
+    \begin{align*}
+        &S\to BC|AC|BA\\
+        &A\to AA|BB|a\\
+        &B\to BA|b\\
+        &C\to AC|c
+    \end{align*}
+    Nun bestimme man, ob das Wort $ababac$ in $L(G)$ liegt.
+\end{bsp}
+
+\setlength{\arraycolsep}{0pt}
+$\begin{NiceArray}
+  [columns-width=15mm, corners = NE, last-row, code-for-last-row = \color{blue}, hvlines]
+  { cccccc }
+  \RowStyle[nb-rows=6]{\rule[-2mm]{0pt}{15mm}}
+    \NotEmpty \\
+    \NotEmpty   & \NotEmpty \\
+    \NotEmpty   & \NotEmpty & \NotEmpty \\
+    \NotEmpty & \NotEmpty & \NotEmpty & \NotEmpty \\
+    \NotEmpty   & \NotEmpty & \NotEmpty & \NotEmpty & \NotEmpty \\
+    \NotEmpty           &           &           &           & \NotEmpty & \NotEmpty \\
+    % \{A\}       & \{A\}     & \{B\}     & \{B\}     & \{B\} & \{C\} \\
+    a           & b         & a         & b         & a     & c
+\CodeAfter
+  \tikz
+    \foreach \x in {1,...,6}
+       \foreach \y in {\x,...,6} 
+         { \node at (\y-|\x) [anchor=north west] {}; } ;
+        %  { \node at (\y-|\x) [anchor=north west] {\small $\x, \the\numexpr 6-\y+\x\relax$ } ; } ;
+\end{NiceArray}$\par
+Die unterste Zeile ist die 1. Zeile. Fangen wir (von links) mit dem ersten Feld der ersten Zeile, so sehen wir, dass ein Nichtterminalsymbol gesucht ist, welches das Wort \textit{a} ableitet. Schaut man auf die Grammatik, so sieht man, dass lediglich die Produktionsregel $A$ das Wort \textit{a} ableitet, weshalb sie in das untere Feld eingetragen wird:
+$\begin{NiceArray}
+  [columns-width=15mm, corners = NE, last-row, code-for-last-row = \color{blue}, hvlines]
+  { cccccc }
+  \RowStyle[nb-rows=6]{\rule[-2mm]{0pt}{15mm}}
+    \NotEmpty \\
+    \NotEmpty   & \NotEmpty \\
+    \NotEmpty   & \NotEmpty & \NotEmpty \\
+    \NotEmpty & \NotEmpty & \NotEmpty & \NotEmpty \\
+    \NotEmpty   & \NotEmpty & \NotEmpty & \NotEmpty & \NotEmpty \\
+    \NotEmpty           &           &           &           & \NotEmpty & \NotEmpty \\
+    \{A\}       & \{A\}     & \{B\}     & \{B\}     & \{B\} & \{C\} \\
+    a           & b         & a         & b         & a     & c
+\CodeAfter
+  \tikz
+    \foreach \x in {1,...,6}
+       \foreach \y in {\x,...,6} 
+         { \node at (\y-|\x) [anchor=north west] {}; } ;
+        %  { \node at (\y-|\x) [anchor=north west] {\small $\x, \the\numexpr 6-\y+\x\relax$ } ; } ;
+\end{NiceArray}$\par
+\chapter{Registermaschine}
+\section{Häufige Operationen}
+\subsection[Überprüfung auf Gleichheit]{$R_1 == R_2$}
+Es gilt: $R_1-R_2=0 \land R_2-R_1=0$ 
+\begin{lstlisting}
+    load #10
+    store 1
+    load #2
+    store 2
+    
+    load 1
+    sub 2
+    store 3
+    
+    load 2
+    sub 1
+    store 4 
+    
+    load 3
+    jzero second_check
+    goto not_equal // else case
+    
+    second_check:   load 4
+    jzero equal // R1-R2 UND R2-R1 sind 0
+    
+    not_equal: END
+    equal: END
+\end{lstlisting}
+\section[Kleiner als]{$R_1 < R_2$}
+Es gilt: $R_2-R_1 \neq 0$
+\begin{lstlisting}
+    load #10
+    store 1
+    load #2
+    store 2
+
+    load 2
+    sub 1
+    jnzero proceed
+    end
+
+    proceed:    do_stuff
+                end
+\end{lstlisting}
+\section[Größer als]{$R_1 > R_2$}
+Es gilt: $R_1-R_2 \neq 0$
+\begin{lstlisting}
+    load #10
+    store 1
+    load #2
+    store 2
+
+    load 1
+    sub 2
+    jnzero proceed
+    end
+
+    proceed:    do_stuff
+                end
+\end{lstlisting}
+
 \end{document}
